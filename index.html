@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Tenjin 接入与使用指南</title>
+<style>
+:root{
+  --ink:#161b22; --ink2:#5a6572; --ink3:#8b95a1;
+  --line:#e3e8ee; --line2:#d0d7de; --bg:#fff; --soft:#f7f9fb; --soft2:#eef2f6;
+  --acc:#0b6bcb; --accSoft:#e7f1fc;
+  --ok:#116d3a; --okSoft:#e3f7ec;
+  --wa:#8a5a00; --waSoft:#fff4d6;
+  --da:#b3261e; --daSoft:#fdeceb;
+  --hl:#fff2b8;
+  --r:12px;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --ink:#e6edf3; --ink2:#9aa4b1; --ink3:#6e7a88;
+    --line:#262c34; --line2:#333b45; --bg:#0d1117; --soft:#141a21; --soft2:#1b222b;
+    --acc:#5aa2f5; --accSoft:#122033;
+    --ok:#4cc06a; --okSoft:#0f2419;
+    --wa:#d9a441; --waSoft:#282013;
+    --da:#f07167; --daSoft:#2b1615;
+    --hl:#3d3618;
+  }
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:64px}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font:15px/1.75 -apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",Segoe UI,sans-serif;
+  -webkit-font-smoothing:antialiased}
+a{color:var(--acc);text-decoration:none}
+a:hover{text-decoration:underline}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.87em;
+  background:var(--soft2);padding:1.5px 6px;border-radius:5px;word-break:break-all}
+b,strong{font-weight:650}
+
+/* top */
+.top{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.88);
+  backdrop-filter:saturate(180%) blur(12px);border-bottom:1px solid var(--line)}
+@media (prefers-color-scheme:dark){.top{background:rgba(13,17,23,.88)}}
+.topin{max-width:940px;margin:0 auto;padding:0 22px;display:flex;align-items:center;gap:18px;height:56px}
+.brand{font-weight:700;font-size:15px;color:var(--ink);white-space:nowrap}
+.brand:hover{text-decoration:none}
+nav{display:flex;gap:2px;flex:1;overflow-x:auto;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+nav a{font-size:14px;padding:6px 12px;border-radius:8px;color:var(--ink2);white-space:nowrap}
+nav a:hover{background:var(--soft2);text-decoration:none;color:var(--ink)}
+#q{width:150px;padding:7px 12px;border:1px solid var(--line2);border-radius:9px;
+  background:var(--soft);color:var(--ink);font-size:13.5px;font-family:inherit;outline:none;transition:.15s}
+#q:focus{border-color:var(--acc);background:var(--bg);width:200px}
+#q::placeholder{color:var(--ink3)}
+
+.wrap{max-width:940px;margin:0 auto;padding:34px 22px 100px}
+h1{font-size:27px;margin:0 0 8px;letter-spacing:-.02em;font-weight:700}
+.lede{color:var(--ink2);font-size:15px;margin:0 0 26px;max-width:660px}
+
+/* part header */
+.part{margin:52px 0 16px;padding-top:6px}
+.part:first-of-type{margin-top:34px}
+.part h2{font-size:19px;margin:0 0 3px;letter-spacing:-.01em;display:flex;align-items:center;gap:9px}
+.part .pn{width:25px;height:25px;border-radius:7px;background:var(--acc);color:#fff;
+  font-size:13px;display:flex;align-items:center;justify-content:center;font-weight:600;flex:none}
+.part p{margin:0 0 0 34px;color:var(--ink2);font-size:14px}
+
+/* collapsibles */
+.list{border:1px solid var(--line);border-radius:var(--r);overflow:hidden;background:var(--bg)}
+details{border-bottom:1px solid var(--line);scroll-margin-top:64px}
+details:last-child{border-bottom:0}
+details[open]{background:var(--soft)}
+details.hit{animation:flash 1.8s ease-out}
+@keyframes flash{0%,45%{background:var(--hl)}100%{background:var(--soft)}}
+summary{list-style:none;cursor:pointer;padding:13px 16px;display:flex;align-items:center;gap:12px;font-size:15px}
+summary::-webkit-details-marker{display:none}
+summary:hover{background:var(--soft2)}
+details[open] summary{border-bottom:1px solid var(--line)}
+.n{flex:none;min-width:26px;height:26px;padding:0 7px;border-radius:8px;background:var(--soft2);
+  border:1px solid var(--line2);color:var(--ink2);font-size:12.5px;font-weight:600;
+  display:flex;align-items:center;justify-content:center;font-variant-numeric:tabular-nums}
+details[open] .n{background:var(--acc);border-color:var(--acc);color:#fff}
+.t{flex:1;font-weight:640;min-width:0}
+.pill{flex:none;font-size:11.5px;padding:2px 9px;border-radius:20px;white-space:nowrap;font-weight:600}
+.pill.hot{background:var(--daSoft);color:var(--da)}
+.pill.opt{background:transparent;color:var(--ink3);font-weight:500;padding:0}
+.pill.key{background:var(--waSoft);color:var(--wa)}
+.lk{flex:none;border:0;background:transparent;color:var(--ink3);cursor:pointer;font-size:13px;
+  padding:3px 6px;border-radius:6px;opacity:0;transition:.12s;font-family:inherit}
+summary:hover .lk{opacity:1}
+.lk:hover{background:var(--soft2);color:var(--acc)}
+.lk.ok{opacity:1;color:var(--ok)}
+.chev{flex:none;color:var(--ink3);font-size:10px;transition:transform .18s}
+details[open] .chev{transform:rotate(90deg)}
+.body{padding:16px 20px 20px 20px;font-size:14.5px}
+.body>*:first-child{margin-top:0}
+.body>*:last-child{margin-bottom:0}
+.body p{margin:11px 0}
+.body ul,.body ol{margin:11px 0;padding-left:22px}
+.body li{margin:6px 0}
+.body h4{font-size:13px;margin:22px 0 9px;color:var(--ink2);font-weight:650;letter-spacing:.04em}
+
+/* do / accept rows */
+.do{background:var(--soft2);border-radius:10px;padding:11px 14px;font-size:14.5px;margin:0 0 12px}
+.do b{color:var(--ink2);font-size:12.5px;letter-spacing:.03em;display:block;margin-bottom:2px}
+details[open] .do{background:var(--bg);border:1px solid var(--line)}
+.acc{display:flex;gap:9px;align-items:flex-start;background:var(--okSoft);color:var(--ok);
+  border-radius:10px;padding:10px 14px;font-size:14px;margin:12px 0;font-weight:550}
+.acc::before{content:"✓";font-weight:700;flex:none}
+
+/* doc chips */
+.docs{display:flex;flex-wrap:wrap;gap:7px;margin:12px 0}
+.docs a{display:inline-flex;align-items:center;gap:5px;font-size:13px;padding:5px 11px;
+  border:1px solid var(--line2);border-radius:20px;color:var(--ink2);background:var(--bg);transition:.13s}
+.docs a::before{content:"↗";font-size:10px;color:var(--ink3)}
+.docs a:hover{text-decoration:none;border-color:var(--acc);color:var(--acc);background:var(--accSoft)}
+.docs a:hover::before{color:var(--acc)}
+
+/* Q&A cards */
+.qa{border-left:3px solid var(--line2);padding:2px 0 2px 14px;margin:14px 0}
+.qa.hot{border-left-color:var(--da)}
+.qa.key{border-left-color:var(--wa)}
+.qa>.q{font-weight:650;margin:0 0 4px;font-size:14.5px}
+.qa.hot>.q{color:var(--da)}
+.qa>p{margin:5px 0}
+.qa ul,.qa ol{margin:7px 0}
+
+/* callouts */
+.note{border-radius:10px;padding:12px 15px;font-size:14.5px;margin:14px 0;border:1px solid transparent}
+.note p{margin:6px 0}
+.note>*:first-child{margin-top:0}.note>*:last-child{margin-bottom:0}
+.note.i{background:var(--accSoft);border-color:var(--accSoft)}
+.note.w{background:var(--waSoft);border-color:var(--waSoft)}
+.note.d{background:var(--daSoft);border-color:var(--daSoft)}
+.note.g{background:var(--okSoft);border-color:var(--okSoft)}
+
+/* tables */
+table{width:100%;border-collapse:separate;border-spacing:0;border:1px solid var(--line);
+  border-radius:10px;overflow:hidden;margin:13px 0;font-size:13.8px;line-height:1.65}
+th{background:var(--soft2);text-align:left;font-weight:650;font-size:13px;color:var(--ink2)}
+th,td{padding:9px 13px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+details[open] table{background:var(--bg)}
+
+/* help cards */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:12px;margin:14px 0}
+.card{border:1px solid var(--line);border-radius:var(--r);padding:15px 17px;background:var(--bg);transition:.15s}
+.card:hover{border-color:var(--line2);box-shadow:0 2px 10px rgba(0,0,0,.045)}
+.card .ic{font-size:19px;line-height:1;margin-bottom:8px}
+.card b{display:block;font-size:14.5px;margin-bottom:4px}
+.card span{font-size:13.5px;color:var(--ink2);line-height:1.65;display:block}
+.card a{font-size:13.5px;display:inline-block;margin-top:7px;word-break:break-all}
+
+.empty{display:none;color:var(--ink3);font-size:14px;padding:26px 4px}
+footer{margin-top:54px;padding-top:20px;border-top:1px solid var(--line);font-size:13px;color:var(--ink3)}
+
+@media(max-width:680px){
+  .topin{height:auto;min-height:56px;flex-wrap:wrap;gap:10px;padding:9px 15px}
+  .brand{width:100%}
+  nav{order:2;flex:1 1 100%}
+  #q{order:3;width:100%}
+  #q:focus{width:100%}
+  .wrap{padding:24px 15px 70px}
+  h1{font-size:23px}
+  .body{padding:14px 15px 17px}
+  .pill{display:none}
+  .lk{opacity:1}
+  .part p{margin-left:0}
+  table{font-size:13px}
+  th,td{padding:8px 10px}
+}
+</style>
+</head>
+<body>
+
+<div class="top"><div class="topin">
+  <a class="brand" href="#top">Tenjin 接入与使用指南</a>
+  <nav>
+    <a href="#p1">接入步骤</a>
+    <a href="#p2">规则与口径</a>
+    <a href="#p3">排查</a>
+    <a href="#p4">需要帮助</a>
+  </nav>
+  <input id="q" type="search" placeholder="搜索…" autocomplete="off">
+</div></div>
+
+<div class="wrap" id="top">
+
+<h1>Tenjin 接入与使用指南</h1>
+<p class="lede">这一页包含接入的全部步骤、Tenjin 的规则与数据口径、以及常见问题的排查方法。默认全部折叠，点开你需要的那一节即可。</p>
+
+<div class="note i">
+  <p><b>核心工作只有四步：</b>建 App（1）→ 集成 SDK（2）→ 对接渠道（3）→ 配置回传（5）。其余按需。</p>
+  <p><b>上线后数据对不上？</b>直接看 <a href="#checklist">排查 · 数据不一致排查清单</a>，前四条就能排除掉大部分情况。</p>
+</div>
+
+<!-- ══════════ PART 1 ══════════ -->
+<div class="part" id="p1">
+  <h2><span class="pn">1</span>接入步骤</h2>
+  <p>按顺序走完即可。每一步都给出要做什么、官方文档、完成标准和常见问题。</p>
+</div>
+
+<div class="list">
+
+<details id="s0">
+  <summary><span class="n">0</span><span class="t">启动：先确认这些信息</span><span class="chev">▶</span></summary>
+  <div class="body">
+    <div class="do"><b>做什么</b>确认下面这几项，以确认你需要哪些集成步骤</div>
+    <ul>
+      <li>App 名称、包名（bundle ID）、平台（iOS / Android）</li>
+      <li>上架哪些商店（Google Play / App Store / 国内安卓商店，分别是哪些）</li>
+      <li>属于哪种类型的 App，变现方式有哪些（广告、内购、订阅等）</li>
+      <li>主要投放渠道有哪些</li>
+      <li>是否有广告变现，用的哪个聚合平台</li>
+      <li>是否需要把数据回传到自己服务器</li>
+    </ul>
+  </div>
+</details>
+
+<details id="s1">
+  <summary><span class="n">1</span><span class="t">账号与 App 创建</span><span class="chev">▶</span></summary>
+  <div class="body">
+    <div class="do"><b>做什么</b>创建组织 → 邀请成员并分配角色 → 创建 App → 取 SDK Key 交给开发</div>
+    <div class="docs">
+      <a href="https://tenjin.com/zh/docs/account-creation/">创建账号</a>
+      <a href="https://tenjin.com/zh/docs/add-apps/">添加 App</a>
+      <a href="https://tenjin.com/zh/docs/manage-organization/">管理组织</a>
+      <a href="https://tenjin.com/zh/docs/manage-user/">管理用户</a>
+      <a href="https://tenjin.com/zh/docs/third-party-android-store/">第三方安卓商店</a>
+    </div>
+    <div class="acc">完成标准：App 已建好，SDK Key 已交付开发</div>
+    <h4>常见 Q&amp;A</h4>
+    <div class="qa key">
+      <div class="q">第三方安卓商店必须单独建 App</div>
+      <p>Google Play 和其它安卓商店（小米 / OPPO / vivo / 传音）在 Tenjin 里是两个独立的 App 实体，store type 选 <code>Other</code>，SDK 里用 <code>TenjinSDK.AppStoreType.other</code> 并使用对应 App 的 API key。</p>
+      <p><b>核心原则：SDK 里声明的 store type 必须严格等于面板里选的类型</b>，不一致会直接报 <code>{"code":404,"message":"no such app"}</code>。</p>
+    </div>
+    <div class="qa">
+      <div class="q">App 还没上架也能建</div>
+      <p>创建 Google Play 类型的 App 需要商店链接，先填一个占位链接创建，正式上架后回来更新即可。</p>
+    </div>
+    <div class="qa">
+      <div class="q">建 Campaign 之前，App 和渠道都要先添加</div>
+      <p>否则新建 Campaign 时 App 下拉框会是空的（显示 No options）。</p>
+    </div>
+  </div>
+</details>
+
+<details id="s2">
+  <summary><span class="n">2</span><span class="t">SDK 集成</span><span class="chev">▶</span></summary>
+  <div class="body">
+    <div class="do"><b>做什么</b>按平台接入 SDK → 在启动时初始化并调用 Connect → 用测试设备验证</div>
+    <div class="docs">
+      <a href="https://tenjin.com/zh/docs/add-the-tenjin-sdk/">添加 Tenjin SDK</a>
+      <a href="https://tenjin.com/zh/docs/mmp-sdk-ios/">iOS SDK</a>
+      <a href="https://tenjin.com/zh/docs/mmp-sdk-android/">Android SDK</a>
+      <a href="https://tenjin.com/zh/docs/mmp-unity-sdk/">Unity SDK</a>
+      <a href="https://tenjin.com/zh/docs/sdk-faq/">SDK FAQ</a>
+      <a href="https://tenjin.com/zh/docs/check-sdk-status/">检查 SDK 状态</a>
+    </div>
+    <div class="acc">完成标准：App 的 Configure 页上，SDK Key 的「Last used」有时间戳 / App Open 已收到（变绿）</div>
+    <h4>常见 Q&amp;A</h4>
+    <div class="qa hot">
+      <div class="q">日志打印了不代表真的连上了</div>
+      <p>最常见的假象是客户端日志里有 Connect 字样，但面板上 SDK Key 显示 <code>Last used: never</code>、App Open 未收到——说明根本没有请求到达 Tenjin。</p>
+      <p>另外 Tenjin 的 Unity SDK 没有 "Init" 这个概念，只有 <code>getInstance(key)</code> + <code>Connect()</code>。</p>
+    </div>
+    <div class="qa key">
+      <div class="q">getAttributionInfo 返回空值或缺失字段，为什么？</div>
+      <p>归因并非即时完成。调用 <code>connect()</code> 之后，服务器必须接收请求、匹配点击并生成结果——几秒是行业标准延迟。如果你查询得太早，结果可能仍在计算中。<b>请在客户端实现重试逻辑：</b></p>
+      <ul>
+        <li>不要延迟调用 <code>connect()</code>——请在隐私政策授权（Android）或 ATT 选择（iOS）之后立即调用</li>
+        <li>在调用 <code>connect()</code> 之后的 2 至 3 秒再首次调用 <code>getAttributionInfo</code></li>
+        <li>如果响应为空或缺失关键字段，请等待 1 至 2 秒并重试</li>
+        <li>将重试次数限制在 3 至 5 次</li>
+      </ul>
+    </div>
+    <div class="qa key">
+      <div class="q">iOS：先 ATT 弹窗，后 SDK 初始化</div>
+      <p>SDK 在首次启动时就会记录 ATT 状态，如果此时用户还没点「允许」，记录到的就是未授权——会导致 ATT 授权率被严重低估。<b>把 Tenjin SDK 初始化放在用户对 ATT 弹窗做出选择之后。</b></p>
+    </div>
+    <div class="qa">
+      <div class="q">不要同时集成 Tenjin SDK 和 Meta SDK</div>
+      <p>两套 SDK 会重复上报，Meta 侧统计会乱。用 Tenjin 作为 MMP 就不要再装 Meta SDK；至少关闭 Meta 设置里的 <code>autoLogAppEventsEnabled</code>，停止默认发送收入 / 购买事件。</p>
+    </div>
+  </div>
+</details>
+
+<details id="s3">
+  <summary><span class="n">3</span><span class="t">渠道对接</span><span class="chev">▶</span></summary>
+  <div class="body">
+    <div class="do"><b>做什么</b>在面板添加渠道并授权 → 按渠道要求完成各自的配置 → 建 Campaign 和追踪链接（非自归因渠道）</div>
+    <div class="docs">
+      <a href="https://tenjin.com/zh/docs/add-channels/">添加渠道</a>
+      <a href="https://tenjin.com/zh/docs/supported-ad-networks/">支持的广告渠道</a>
+      <a href="https://tenjin.com/zh/docs/create-campaign-and-tracking-links/">创建 Campaign 与追踪链接</a>
+    </div>
+    <div class="acc">完成标准：渠道能拉到花费数据，且开始投放后能看到 Tracked Installs</div>
+    <div class="note i">
+      <p><b>先理解这一步在做什么：</b></p>
+      <ul>
+        <li>添加渠道并新建一个 campaign 的目的，是<b>生成一条追踪链接</b>，然后把这条链接复制到渠道后台。</li>
+        <li>后续的 campaign <b>不需要</b>在 Tenjin 里逐个添加，可以从渠道直接拉取。</li>
+        <li><b>部分 SAN 自归因渠道没有追踪链接，看不到是正常的。</b></li>
+      </ul>
+    </div>
+    <p>各家渠道对「活动（Campaign）」的叫法都不一样，对照表见 <a href="https://docs.google.com/spreadsheets/d/1sBJiQOpQOHyGT7eaAme2LXyqmBVtExyqDhZNjD4fhzs/edit?usp=sharing">各渠道层级名称对照</a>。</p>
+    <p>下面三节分别是 <a href="#meta">Meta</a>、<a href="#google">Google Ads</a>、<a href="#tiktok">TikTok</a> 和 <a href="#other">其它渠道</a> 的配置要点。</p>
+  </div>
+</details>
+
+<details id="meta">
+  <summary><span class="n">3.1</span><span class="t">渠道：Meta</span><span class="pill hot">高频</span><span class="chev">▶</span></summary>
+  <div class="body">
+    <div class="docs">
+      <a href="https://tenjin.com/zh/docs/meta-setup/">Meta 渠道配置</a>
+      <a href="https://tenjin.com/zh/docs/meta-amm-tenjin/">Meta AMM 与 Tenjin</a>
+    </div>
+    <div class="qa hot">
+      <div class="q">⚠️ 头号常见问题：AMM 授权</div>
+      <p>要解锁完整的活动报告 / 数据显示，需要满足以下<b>任一</b>条件：</p>
+      <p><b>①</b> 达到最低流量门槛（&gt;100 个独立用户 或 &gt;100 次跟踪安装），<b>或 ②</b> 在 Meta Events Manager 接受 <b>AMM（Advanced Mobile Measurement）</b>条款。</p>
+      <p>两者都不满足时，Meta 会套用严格的隐私阈值，低于阈值的 campaign 数据会被 API 遮蔽——表现为 Meta 后台有几十上百个安装，Tenjin 不显示或部分不显示。<b>建议在开始投放之前就把 AMM 签掉</b>，不要等跑量。</p>
+    </div>
+    <div class="qa">
+      <div class="q">层级映射跟你的直觉不一样</div>
+      <table>
+        <tr><th>Tenjin 里的</th><th>实际是 Meta 的</th></tr>
+        <tr><td>campaign</td><td>ad set（广告组）</td></tr>
+        <tr><td>creative</td><td>ad（广告）</td></tr>
+        <tr><td>site</td><td>版位（placement）</td></tr>
+      </table>
+      <p>Tenjin 面板上默认显示的 Meta campaign 是「广告组名（广告系列名）」这种格式。Meta 真正的 campaign 层（<code>campaign_group</code>）目前没有对应的 Tenjin 维度。</p>
+    </div>
+    <div class="qa">
+      <div class="q">Meta 有两个广告收入回传，默认只开不带 Purchase 的那个</div>
+      <table>
+        <tr><th>回传</th><th>发到哪</th><th>什么时候用</th></tr>
+        <tr><td><b>Ad Revenue</b></td><td>Meta 的 AdImpression 接口</td><td><b>默认选项，适用于所有广告活动类型。</b>一般开这个就够了</td></tr>
+        <tr><td><b>Ad Revenue (as Purchase)</b></td><td>Meta 的 Purchase 接口</td><td><b>仅在运行混合价值优化（blended VO）广告活动时使用</b>——也就是你想把广告收入和内购收入一起发到同一个 purchase 接口</td></tr>
+      </table>
+    </div>
+  </div>
+</details>
+
+<details id="google">
+  <summary><span class="n">3.2</span><span class="t">渠道：Google Ads</span><span class="pill hot">高频</span><span class="chev">▶</span></summary>
+  <div class="body">
+    <div class="docs"><a href="https://tenjin.com/zh/docs/google-ads-setup/">Google Ads 渠道配置</a></div>
+    <div class="qa hot">
+      <div class="q">⚠️ 头号常见问题：Tenjin 的转化动作须设为 Primary</div>
+      <p>官方说明：<b>将 Firebase 设置为主要转化事件，可能会导致 Tracked Installs 和 Reported Installs 之间的差异增大。</b></p>
+      <p>操作路径：Google Ads → 点开转化名（形如 <code>你的包名 first_open</code>）→ Edit Settings → 把 Action optimization 从 Secondary 改成 Primary。改完之后 Smart Bidding 需要 1–2 个转化周期重新学习，差异是逐步收敛的，不会立刻变好。<b>这是过去几个月出现频次最高的单一问题。</b></p>
+      <div class="docs"><a href="https://tenjin.com/zh/docs/google-ads-setup/#4-import-conversion-events-from-tenjin-mandatory-for-android-and-ios">从 Tenjin 导入转化事件（步骤 4）</a></div>
+    </div>
+    <div class="qa">
+      <div class="q">多个 Google Ads 账户：每个 Link ID 各加一条回传</div>
+      <p>官方说明：「如果你有多个 Link IDs，点击 <b>+ ADD EVENTS → Advanced</b>，然后为每个 Link ID 添加回传。」</p>
+      <div class="docs"><a href="https://tenjin.com/zh/docs/google-ads-setup/#3-add-your-link-id-on-tenjins-dashboard-mandatory-for-android-and-ios">在 Tenjin 面板添加 Link ID（步骤 3）</a></div>
+    </div>
+    <div class="qa key">
+      <div class="q">Google Ads 里选不到 Tenjin 作为转化来源？因为还没有真实安装量</div>
+      <p>即使关联已经建好、回传也加了，Google Ads 也要在该 Link ID 下<b>真正收到过安装回传之后</b>，才会把第三方应用分析放进可选来源列表。刚关联、零安装时必然看不到。</p>
+      <p><b>这不是配置错，发正式包、等真实安装进来后几小时到一天再回来选。</b></p>
+    </div>
+    <div class="qa">
+      <div class="q">改不了转化动作？</div>
+      <p>先检查是不是 Manager Account（MCC）的权限限制，另外确认 campaign 目标选的是 "Installs"。</p>
+    </div>
+  </div>
+</details>
+
+<details id="tiktok">
+  <summary><span class="n">3.3</span><span class="t">渠道：TikTok</span><span class="chev">▶</span></summary>
+  <div class="body">
+    <div class="docs">
+      <a href="https://tenjin.com/zh/docs/tiktok-for-business-setup/">TikTok for Business 配置</a>
+      <a href="https://docs.google.com/document/d/1TxVjevsmE4v60_gu4_RZO9iyBA4lyXlva_CoipaPqXU/edit">TikTok 数据差异排查指引</a>
+    </div>
+    <div class="qa">
+      <div class="q">TikTok 现在是自归因渠道，不再使用追踪链接</div>
+      <p>按新的集成文档走，不用找 tracking URL。</p>
+    </div>
+    <div class="qa">
+      <div class="q">Tenjin 的 TikTok campaign 显示的是「广告组名（广告系列名）」</div>
+      <p>英文即 <b>Ad Set Name (Campaign Name)</b>。原因：按 campaign 层向 TikTok API 请求拿不到 platform 和 <code>bundle_id</code>，所以 Tenjin 只能按 Ad Group 层请求。这是报表架构限制，无法调整。</p>
+    </div>
+  </div>
+</details>
+
+<details id="other">
+  <summary><span class="n">3.4</span><span class="t">渠道：其它</span><span class="chev">▶</span></summary>
+  <div class="body">
+    <div class="qa">
+      <div class="q">渠道 Campaign ID 显示 "unknown" 是正常的</div>
+      <p>这个字段要等 campaign 真正产生归因数据之后才会解析出来，新建的时候就是 unknown。但如果<b>投放后仍然为 unknown、同时点击数也是 0</b>，那就要去查追踪链接的宏映射了。</p>
+    </div>
+    <div class="qa">
+      <div class="q">OPPO / vivo 没有商店落地页 URL 怎么填？</div>
+      <p>这两家商店会自己负责跳转，所以 App 创建时那个 URL 填什么都可以。</p>
+    </div>
+  </div>
+</details>
+
+<details id="s4">
+  <summary><span class="n">4</span><span class="t">归因设置</span><span class="pill opt">默认不需调整</span><span class="chev">▶</span></summary>
+  <div class="body">
+    <div class="do"><b>做什么</b>默认情况下不需要对归因进行调整。除非你想要修改归因窗口、修改同期群关于日期的定义等</div>
+    <div class="docs">
+      <a href="https://tenjin.com/zh/docs/attribution-window-setup/">归因窗口设置</a>
+      <a href="https://tenjin.com/zh/docs/retention/">留存与同期群</a>
+      <a href="https://tenjin.com/zh/docs/user-attribution-overview/">用户归因总览</a>
+    </div>
+    <p>概念背景（末次点击、归因窗口、同期群两种算法）见 <a href="#organic">自然量是怎么来的</a> 和 <a href="#cohort">同期群指标</a>。</p>
+  </div>
+</details>
+
+<details id="s5">
+  <summary><span class="n">5</span><span class="t">回传配置</span><span class="pill key">重要</span><span class="chev">▶</span></summary>
+  <div class="body">
+    <div class="do"><b>做什么</b>配置发给渠道的回传 → 需要的话，配置发给自己服务器的 S2S 回传</div>
+    <div class="docs">
+      <a href="https://tenjin.com/zh/docs/callback-setup/">回传配置</a>
+      <a href="https://tenjin.com/zh/docs/callback-macros/">回传参数宏</a>
+      <a href="https://tenjin.com/zh/docs/server-to-server-s2s-callbacks/">S2S 回传</a>
+      <a href="https://tenjin.com/zh/docs/implementing-s2s-tracking-a-no-sdk-guide/">无 SDK 的 S2S 接入</a>
+    </div>
+    <div class="note d"><p><b>不配会怎样：</b>渠道收不到转化数据，无法完整归因，也无法优化投放。</p></div>
+    <div class="acc">完成标准：App → Callbacks 里相应的回传开关已打开；投放开始后 Callback Health 显示有真实记录</div>
+    <h4>怎么读 Callback Health</h4>
+    <p>Callback Health 是判断<b>「Tenjin 侧归因是否成功记录并发送给渠道」</b>的主要标准。</p>
+    <table>
+      <tr><th>显示</th><th>含义</th></tr>
+      <tr><td><b>绿色 100%</b></td><td>过去一天所有回传都成功发出，且都被对方成功接收</td></tr>
+      <tr><td><b>黄色 / 红色</b></td><td>有部分回传发送了，但被渠道拒绝了</td></tr>
+      <tr><td><b>没有颜色和百分比</b></td><td>这个事件在过去一天没有被触发过。<b>这不一定代表故障</b>——可能只是没有对应的事件需要被发送</td></tr>
+    </table>
+    <p>点进具体的某一条 callback，可以看过去成功和失败传递的记录，也可以看过去一小时和过去一天尝试发送的事件次数。</p>
+    <h4>常见 Q&amp;A</h4>
+    <div class="qa">
+      <div class="q">要启用某个渠道的回传，必须先在该渠道下授权至少一个广告账户</div>
+      <p>但如果你不用 SDK、走纯 S2S 的事件上报，事件上报本身不需要任何渠道授权。如果 App 还在开发中没提交商店，Tenjin 侧的渠道配置可以等上线再做。</p>
+    </div>
+    <div class="qa">
+      <div class="q">测试设备测不出回传记录</div>
+      <p>测试设备只记录进入 Tenjin 的测试事件；发给渠道的回传要等真实投放跑起来、且有真实归因安装之后才会产生。</p>
+    </div>
+    <div class="qa">
+      <div class="q">渠道面板显示安装量为 0？</div>
+      <p>先确认 Tenjin 的回传开关是否打开。</p>
+    </div>
+  </div>
+</details>
+
+<details id="s6">
+  <summary><span class="n">6</span><span class="t">广告变现接入</span><span class="pill opt">可选</span><span class="chev">▶</span></summary>
+  <div class="body">
+    <div class="do"><b>做什么</b>接入聚合平台对应的 Tenjin 监听插件 → 打开渠道的 Ad Revenue 回传</div>
+    <div class="docs">
+      <a href="https://tenjin.com/zh/docs/category/ad-revenue-ad-mediation-setup/">支持的聚合平台与接入代码</a>
+      <a href="https://tenjin.com/zh/docs/ad-revenue-channel-api-setup/">Ad Revenue 渠道 API 配置</a>
+      <a href="https://tenjin.com/zh/docs/difference-between-ad-mediation-ltv-and-ad-revenue-ltv/">两种广告收入的区别</a>
+    </div>
+    <div class="acc">完成标准：Ad Revenue / Ad Mediation 有数</div>
+    <h4>常见 Q&amp;A</h4>
+    <div class="qa key">
+      <div class="q">聚合平台是接 SDK 插件，不是在面板「加渠道」</div>
+      <p>广告变现走的是独立的 SDK 插件集成——Tenjin 的 SDK 去监听聚合平台的展示事件。聚合平台不是单一投放渠道，不需要作为渠道添加。我们支持的聚合平台以及各自的接入代码都在文档里。</p>
+    </div>
+    <div class="qa">
+      <div class="q">怎么区分买量渠道和变现渠道？</div>
+      <p>在 <b>Add a Channel</b> 界面，卡片<b>右下角标注了 revenue 的就是变现渠道</b>，标注了 <b>attribution 和 spend 的是买量渠道</b>。</p>
+    </div>
+    <div class="qa">
+      <div class="q">为什么在 UA 面板里能看到广告变现收入？</div>
+      <p>因为 UA 面板是<b>以买量渠道的维度</b>展示数据的。聚合平台提供的广告收益是 <b>ILRD（Impression Level Revenue Data，展示级收入数据）</b>，它<b>能和这个用户是从哪个买量渠道来的绑定上</b>，所以用来看 ROAS 比较合理。</p>
+    </div>
+    <div class="qa">
+      <div class="q">面板上的广告收入有 Ad Mediation 和 Ad Network 两种，建议看前者</div>
+      <p>Ad Network 需要通过 API 逐个授权每一个变现渠道才能拿全。两者的完整区别、正常差异范围和排查方法见 <a href="#revenue">三种收入指标</a>。</p>
+    </div>
+    <div class="qa">
+      <div class="q">聚合平台后台有收入但 Tenjin 里一分钱没有？</div>
+      <p>先检查 SDK 插件的集成，也可以去 <b>Diagnose - Health</b> 检查并连上缺失的广告位。</p>
+    </div>
+  </div>
+</details>
+
+<details id="s7">
+  <summary><span class="n">7</span><span class="t">内购收入上报</span><span class="pill opt">可选</span><span class="chev">▶</span></summary>
+  <div class="body">
+    <div class="do"><b>做什么</b>按你的收款方式选择上报路径</div>
+    <div class="docs">
+      <a href="https://tenjin.com/zh/docs/in-app-purchase-iap-revenue/">内购收入</a>
+      <a href="https://tenjin.com/zh/docs/server-to-server-s2s-purchases/">S2S 购买上报</a>
+    </div>
+    <div class="acc">完成标准：测试阶段 Live Event Tool 里能看到事件；真实购买场景下 SDK 集成状态表的「Valid Purchase Event」已点亮</div>
+    <h4>常见 Q&amp;A</h4>
+    <div class="qa key">
+      <div class="q">购买上报分两条路，取决于你用谁收款</div>
+      <table>
+        <tr><th>收款方式</th><th>走哪条路</th><th>需要什么</th></tr>
+        <tr><td><b>官方商店支付</b></td><td>SDK 的 transaction API</td><td><b>须带收据 / 签名。</b>没有收据 Tenjin 无法向商店校验，交易状态会标记 UNKNOWABLE。如果不想校验收据，可在 <b>App - edit</b> 页面找到 <b>"Accept unvalidated purchases?"</b> 并勾选，这样后续就不再校验收据</td></tr>
+        <tr><td><b>第三方支付</b></td><td>S2S Purchase API</td><td>不需要客户端收据和签名</td></tr>
+      </table>
+    </div>
+    <div class="qa hot">
+      <div class="q">SDK 和服务器不要同时上报同一笔交易</div>
+      <p>否则收入直接翻倍。选了 S2S 就把 SDK 侧的上报去掉。</p>
+    </div>
+    <div class="qa">
+      <div class="q">怎么排查 SDK 记录的内购事件？</div>
+      <p>在 Raw Data Exporter 里选择 purchase 事件，可以导出最近的内购事件明细。看 <code>purchase_state</code> 这个字段，就能判断它是否通过了校验。</p>
+    </div>
+  </div>
+</details>
+
+<details id="s8">
+  <summary><span class="n">8</span><span class="t">自定义事件上报</span><span class="pill opt">可选</span><span class="chev">▶</span></summary>
+  <div class="body">
+    <div class="do"><b>做什么</b>规划要上报的关键事件 → 在 SDK 端埋点 → 需要回传给渠道的，在回传配置里按事件名配</div>
+    <div class="docs"><a href="https://tenjin.com/zh/docs/custom-in-app-events/">自定义应用内事件</a></div>
+    <h4>常见 Q&amp;A</h4>
+    <div class="qa key">
+      <div class="q">自定义事件只支持整数，不支持金额和币种，也不支持嵌套参数字典</div>
+      <p>Tenjin 是营销归因工具，不是产品分析工具。要上报收入一律走 <a href="#s7">步骤 7 的 Purchase API</a>；需要复杂多维事件参数的，建议并行跑 Firebase / GameAnalytics，用 Tenjin 的 Customer User ID 做关联。</p>
+    </div>
+    <div class="qa">
+      <div class="q">每个 App 上限 500 个自定义事件</div>
+      <p>只把和投放优化相关的关键事件发给 Tenjin（注册、教程完成、关键关卡、首充等）；海量游戏内埋点（比如几百个关卡逐个上报）请用专门的产品分析工具，否则很快会撞上限，面板也会被塞满。</p>
+    </div>
+    <div class="qa">
+      <div class="q">想把某个事件回传给渠道？</div>
+      <p>先在 SDK 端把事件发出来，它才会出现在回传配置的可选事件列表里。</p>
+    </div>
+  </div>
+</details>
+
+<details id="s9">
+  <summary><span class="n">9</span><span class="t">看数与导出</span><span class="chev">▶</span></summary>
+  <div class="body">
+    <div class="do"><b>做什么</b>熟悉面板 → 建立对账规范 → 需要的话接 API</div>
+    <div class="docs">
+      <a href="https://tenjin.com/zh/docs/dashboard-metrics-list/">面板指标定义清单</a>
+      <a href="https://tenjin.com/zh/docs/filters-and-grouping/">筛选与分组</a>
+      <a href="https://tenjin.com/zh/docs/tenjin-analysis/">数据分析类型</a>
+      <a href="https://tenjin.com/zh/docs/raw-data-exporter/">原始数据导出</a>
+      <a href="https://tenjin.com/zh/docs/aggregated-data-exporter/">聚合数据导出</a>
+      <a href="https://tenjin.com/zh/docs/api-access-tokens/">API 访问令牌</a>
+      <a href="https://tenjin.com/zh/docs/automation-apis/">Automation API</a>
+    </div>
+    <div class="note i"><p><b>面板怎么用、报表有哪些、导出工具怎么选</b>——完整说明见 <a href="#dashboard">怎么看面板、用哪个工具导数</a>。</p></div>
+    <h4>常见 Q&amp;A</h4>
+    <div class="qa">
+      <div class="q">Live Event 工具里没有 ≠ 数据没进来</div>
+      <p>它只显示已登记测试设备的事件。</p>
+    </div>
+    <div class="qa">
+      <div class="q">API 拉数如果量级非常大，建议：</div>
+      <p><code>read_timeout</code> 设 180–300 秒（默认太短会间歇性超时）；设 <code>per_page=1000</code>（不设会触发参数校验错误）；定时任务加 3 天回溯窗口（拉 T-1 数据太早，ETL 还没跑完，会导致 D0 收入偏低）。</p>
+    </div>
+  </div>
+</details>
+
+</div>
+
+<!-- ══════════ PART 2 ══════════ -->
+<div class="part" id="p2">
+  <h2><span class="pn">2</span>规则与口径</h2>
+  <p>Tenjin 是怎么记账的。不用通读，遇到哪个概念看哪一节。</p>
+</div>
+
+<div class="list">
+
+<details id="install">
+  <summary><span class="n">1</span><span class="t">一次「安装」是怎么被记下来的</span><span class="chev">▶</span></summary>
+  <div class="body">
+    <p>Tenjin 记的<b>不是应用商店的下载</b>，而是 <b>SDK 在设备上第一次成功上报的 app open</b>。官方原文：「the first app_open event as the Install event and all subsequent app_open events are recorded for sessions.」——第一次 app open 记为安装，之后的 app open 都记为会话（session）。</p>
+    <p>由此推出几个常被问到的结论：</p>
+    <ul>
+      <li>用户在商店点了下载但从没打开过 app → Tenjin 里<b>没有</b>这次安装。</li>
+      <li>SDK 没跑起来 = 没有任何数据，根本没上报。</li>
+      <li>原始数据里的 <code>acquired_at</code> 就是这个首次打开的时间，<b>不是</b>商店下载时间。它是所有同期群指标的锚点。</li>
+    </ul>
+    <div class="docs">
+      <a href="https://tenjin.com/zh/docs/attribution-faq/">归因常见问题</a>
+      <a href="https://tenjin.com/zh/docs/user-attribution-overview/">用户归因总览</a>
+    </div>
+  </div>
+</details>
+
+<details id="tracked">
+  <summary><span class="n">2</span><span class="t">Tracked Install vs Reported Install：为什么两边数字对不上</span><span class="pill hot">高频</span><span class="chev">▶</span></summary>
+  <div class="body">
+    <table>
+      <tr><th>指标</th><th>含义</th><th>谁说了算</th></tr>
+      <tr><td><b>Tracked Installs</b><br>跟踪激活</td><td>Tenjin 自己追踪并归因到的安装</td><td>Tenjin</td></tr>
+      <tr><td><b>Reported Installs</b><br>报告激活</td><td>广告渠道自己上报的安装</td><td>渠道</td></tr>
+    </table>
+    <div class="note d"><p><b>请以 Tracked Installs 为准。</b>这是 Tenjin 作为第三方独立归因的结果，也是计费和出报表的口径。Reported Installs 只是把渠道自己的说法原样展示出来，方便你对照。</p></div>
+    <p><b>正常差异范围：自归因（SAN）渠道可达 30%，非自归因渠道约 10%。</b></p>
+    <h4>为什么两者一定会有差</h4>
+    <p>根本原因是：每个渠道只知道自己的投放，而归因的意义恰恰是<b>同时看你所有渠道的活动</b>，再决定每个用户到底该算谁的。具体到常见的五类原因：</p>
+    <table>
+      <tr><th>原因</th><th>说明</th></tr>
+      <tr><td><b>渠道忽视第三方归因的判定</b></td><td>Meta、Google 等大渠道依托自身技术，会自行判定哪次激活归属于自己。当用户同时接触了多个渠道，第三方就很难让每一家都接受最终的归属结论。</td></tr>
+      <tr><td><b>激活回调（callback）或追踪链接（click tracking url）没配好</b></td><td>最常见、也最容易修的一类。回到<a href="https://tenjin.com/zh/docs/category/channel-setup/">对应的渠道配置文档</a>逐项复核回传和链接是否正确、是否在正常运行即可。</td></tr>
+      <tr><td><b>概率归因带来的不确定性</b></td><td>当渠道不支持收集设备标识（IDFA / GAID）时，只能通过概率方式匹配用户，准确度天然低于确定性匹配。</td></tr>
+      <tr><td><b>渠道 SDK 与归因 SDK 重复上报</b></td><td>Tenjin 会把激活回传给渠道；如果 App 里另有一个渠道 SDK 也发了一次激活，渠道侧的 Reported 就可能被记两次。</td></tr>
+      <tr><td><b>渠道使用了与我们不同的归因逻辑</b></td><td>多见于自归因渠道，其内部归因是黑盒。</td></tr>
+    </table>
+    <p>几个会把差异<b>额外放大</b>的具体配置问题，见 <a href="#google">Google Ads 转化动作</a> 和 <a href="#meta">Meta 的 AMM</a>。</p>
+  </div>
+</details>
+
+<details id="organic">
+  <summary><span class="n">3</span><span class="t">自然量（Organic）是怎么来的</span><span class="chev">▶</span></summary>
+  <div class="body">
+    <p>Tenjin 用的是<b>末次点击 + 展示归因</b>（last click and view-through）。点击优先于展示；常见窗口是点击 7 天、展示 24 小时，可在面板调整。</p>
+    <div class="note w"><p>一个安装被记成 Organic，只意味着一件事：<b>在归因窗口内，没有找到任何能匹配上这台设备的广告互动。</b></p></div>
+    <p>所以看到自然量异常高，先查这三件事：</p>
+    <ol>
+      <li>广告点击有没有正常进来</li>
+      <li>投放的广告渠道有没有授权配置</li>
+      <li>设备标识有没有采到</li>
+    </ol>
+    <div class="docs">
+      <a href="https://tenjin.com/zh/docs/user-attribution-overview/">用户归因总览</a>
+      <a href="https://tenjin.com/zh/docs/attribution-window-setup/">归因窗口设置</a>
+    </div>
+  </div>
+</details>
+
+<details id="reinstall">
+  <summary><span class="n">4</span><span class="t">用户重装会怎么算</span><span class="chev">▶</span></summary>
+  <div class="body">
+    <p><b>底层情况：</b>每一次安装都会生成一个全新的安装 ID（AIID，Analytics Installation ID，也是 Tenjin 记录归因的主键），所以<b>重装天然长得像一个新用户</b>。Tenjin 会用设备标识（Android 的 GAID、iOS 上已授权 ATT 的 IDFA）去查这台设备以前的安装记录，尽量把他认回来。</p>
+    <h4>默认行为（不做任何额外配置时）</h4>
+    <table>
+      <tr><th>情况</th><th>结果</th></tr>
+      <tr><td><b>重装 · 认出来了</b></td><td><b>继承原来的归因。</b>不产生新的转化、不重复计费、不重复回传给渠道；该用户后续的收入继续算在最初获取他的 campaign 名下</td></tr>
+      <tr><td><b>重装 · 认不出来</b></td><td>无法继承原归因，只能当成一次全新的归因来判断。如果没有可匹配的广告互动，就归 <b>Organic</b></td></tr>
+    </table>
+    <h4>什么情况下认不出来</h4>
+    <ul>
+      <li><b>iOS 用户拒绝了 ATT。</b>拿不到 IDFA 就无法确认是同一台设备，这类重装会被当成新安装处理。这是最主要的一类。</li>
+      <li><b>Android 拿不到 GAID</b>（无 Google 服务的设备，或用户在系统设置里关掉了广告个性化）。</li>
+      <li><b>距离上一次活跃 2 年以上</b>——这种情况会被当作一个全新用户。</li>
+    </ul>
+    <h4>如果你在投再营销 / 召回广告（需要单独开通）</h4>
+    <table>
+      <tr><th>类型</th><th>用户做了什么</th></tr>
+      <tr><td><b>重装（Reinstall）</b></td><td>把 App 删掉了，之后又装回来</td></tr>
+      <tr><td><b>回流（Reactivation）</b></td><td>App 一直没删，只是很久没打开，后来又回来了</td></tr>
+    </table>
+    <p>如果希望被广告拉回来的用户重新算到那个再营销 campaign 头上，这是一个<b>独立的功能</b>，需要提前联系我们开通，不是默认行为。开通后，<b>以下三个条件全部满足</b>，这次回归才会被记到你的 campaign 头上：</p>
+    <ol>
+      <li>该 <b>App</b> 和该<b>广告渠道</b>的 re-engagement 都已开启。<b>建议在 campaign 开始前几天就配好。</b></li>
+      <li>用户的沉寂时长<b>超过不活跃阈值</b>——默认 <b>7 天</b>，可设 <b>1–30 天</b>，按完整 UTC 自然日计算。<b>重装和回流都适用这个阈值。</b></li>
+      <li>归因窗口内有一次<b>有效的付费广告互动</b>。</li>
+    </ol>
+    <p>任何一条不满足，什么都不会变，用户保持原有的归因。付费的再营销转化和付费安装一样，计为一次付费转化。</p>
+    <p><b>不追溯：</b>只对功能开启之后发生的回归生效，开启之前的回归无法补算。</p>
+    <div class="note w"><p><b>归因是「移动」，不是「拆分」。</b>一个用户在同一时间只归属于一个 campaign，一次归因会一直有效，直到下一次重新归因把它替换掉。当回归用户被重新归因到你的再营销 campaign 时，这个用户的全部功劳——<b>包括历史 LTV</b>——会整体离开原来的 campaign。</p></div>
+  </div>
+</details>
+
+<details id="timezone">
+  <summary><span class="n">5</span><span class="t">时间口径：UTC-0</span><span class="pill hot">高频</span><span class="chev">▶</span></summary>
+  <div class="body">
+    <p><b>Tenjin 面板统一使用 UTC+0，目前不支持切换时区。</b>这也是大部分全球投放产品的默认设置。</p>
+    <p>主要原因是 ROI、ROAS、LTV 等数据会依赖各广告和变现渠道的 API，而部分渠道只提供 UTC-0 数据。为了保证数据一致性，目前 Tenjin 暂时还不支持时区切换。自定义时区功能已经在排期中。</p>
+    <p>另外也建议媒体开户时尽量选择 UTC-0 时区，后续数据对齐会更稳定。</p>
+    <div class="note d"><p><b>对账规范：</b>拿任何一方的数据来比之前，先确认两边都调到了 UTC+0，并且比较的是同一个时间区间。这是「数据对不上」里最常见、也最容易排除的一个原因。</p></div>
+  </div>
+</details>
+
+<details id="cohort">
+  <summary><span class="n">6</span><span class="t">同期群（Cohort）指标：N-Day 是什么意思</span><span class="chev">▶</span></summary>
+  <div class="body">
+    <p><b>识别方法很简单：指标名里带「N-Day」的，就是同期群指标。</b>例如 N-Day IAP LTV、N-Day Retention Rate、N-Day Ad ROAS。官方定义：「All N-Day metrics are cohorted metrics and grouped by Acquisition Date.」——全部按获取日期（也就是安装日）分组。</p>
+    <p>不带 N-Day 的指标（Spend、Tracked Installs、Revenue 等）是<b>按事件发生当天</b>统计的日常指标。</p>
+    <div class="note w"><p><b>这两类不能混着比。</b>「7 月 1 日的收入」和「7 月 1 日安装的用户带来的后续 7 日收入」是两个完全不同的数。</p></div>
+    <p><b>两种同期群算法</b>（面板路径：<b>My Account → Manage User → Cohort Strategy</b>）：</p>
+    <table>
+      <tr><th></th><th>怎么切分 Day N</th><th>适合</th></tr>
+      <tr><td><b>UTC（绝对）</b></td><td>Day 1 从用户安装时间之后的第一个 UTC 零点开始。所以 Day 0 是安装当天那段不完整的时间</td><td>和其它按 UTC 统计的平台对齐，减少口径差异</td></tr>
+      <tr><td><b>Relative（相对，默认设置）</b></td><td>从每个用户自己的安装时刻起算，每 24 小时为一天。0–24h 为 Day 0，25–48h 为 Day 1</td><td>看用户真实的行为节奏，不受安装时点影响</td></tr>
+    </table>
+    <p>要让做对账的人知道你选的是哪个——同一批用户在两种算法下的留存和 ROAS 数字必然不同。</p>
+    <div class="docs">
+      <a href="https://tenjin.com/zh/docs/manage-user/">用户与账号设置</a>
+      <a href="https://tenjin.com/zh/docs/retention/">留存</a>
+      <a href="https://tenjin.com/zh/docs/tenjin-analysis/">Tenjin 数据分析类型</a>
+    </div>
+  </div>
+</details>
+
+<details id="revenue">
+  <summary><span class="n">7</span><span class="t">面板上的三种收入指标，千万别混</span><span class="pill hot">高频</span><span class="chev">▶</span></summary>
+  <div class="body">
+    <table>
+      <tr><th></th><th>指标举例</th><th>是什么</th><th>数据从哪来</th><th>什么时候用</th></tr>
+      <tr><td><b>IAP 收入</b></td><td>IAP Revenue 等</td><td>应用内购买</td><td>你的 App 通过 SDK 或 S2S 上报</td><td>付费 LTV / ROAS</td></tr>
+      <tr><td><b>Ad Mediation 收入</b></td><td>ad revenue (ad mediation)、0-Day LTV (ad mediation)、7-Day ROAS (ad mediation) 等</td><td>广告变现收入，<b>展示级</b></td><td>聚合平台 SDK 实时上报（ILRD）</td><td><b>算广告 ROAS 一律用这个</b></td></tr>
+      <tr><td><b>Ad Network 收入</b></td><td>ad revenue (ad network)、0-Day LTV (ad network)、7-Day ROAS (ad network) 等</td><td>广告变现收入，<b>结算级</b></td><td>从各变现渠道的报表 API 拉当日结算总额</td><td>核对实际到账、交叉验证异常流量</td></tr>
+    </table>
+    <h4>Ad Mediation 与 Ad Network 到底差在哪</h4>
+    <p><b>Ad Mediation（展示级）</b>——这个数字不是 Tenjin 算出来的。聚合平台（AppLovin MAX、Unity LevelPlay、AdMob、TopOn、CAS、TradPlus 等）在每一次广告展示后，会发出一个展示级收入信号（ILRD，Impression Level Revenue Data），告诉 Tenjin 这次展示胜出方出了多少钱；Tenjin 的 SDK 负责监听它。因为每条信号都带用户标识，<b>Tenjin 能把这笔收入绑定到具体的用户，再逐层汇总到买量的 campaign / 渠道 / App</b>。原则上它应该和你在聚合平台后台看到的数字一致。</p>
+    <p><b>Ad Network（结算级）</b>——Tenjin 调用每个变现渠道的报表 API，拉取 App / 日期级别的<b>实际结算收入</b>，然后按各买量渠道贡献的<b>会话数占比</b>把这笔总额分摊下去（同一渠道 / campaign 下的每个会话被视为等值）。它是「真正到账的钱」，但因为是按会话分摊而不是逐次展示测量的，落到单个买量渠道和单个用户身上时精度天然偏低。</p>
+    <div class="note g"><p><b>所以：算 ROAS、做买量渠道优化，一律用 Ad Mediation。</b>UA 报表里每一行是一个买量渠道，而展示级、绑定到用户的 Mediation 数字才是准确的分渠道视图。Ad Network 用来核对实际到账、做完整性基准，以及交叉发现异常流量。</p></div>
+    <h4>两种收入各自的接入前提</h4>
+    <ul>
+      <li><b>Ad Mediation</b> 需要：你的 App 里已集成聚合平台 SDK（MAX / TopOn / AdMob / TradPlus / LevelPlay 等），<b>并且安装了 Tenjin 对应的监听插件。</b></li>
+      <li><b>Ad Network</b> 需要：把<b>每一个</b>变现渠道都在面板里单独添加并授权。只加了聚合平台的变现平台账号（如 AppLovin Publisher）不等于就能拉到所有被聚合渠道的结算数据——每个变现渠道都要单独配。少加一个，那部分收入就完全不在里面，这是两边差异过大最常见的原因。</li>
+    </ul>
+    <div class="docs">
+      <a href="https://tenjin.com/zh/docs/category/ad-revenue-ad-mediation-setup/">支持的聚合平台与插件代码</a>
+      <a href="https://tenjin.com/zh/docs/ad-revenue-channel-api-setup/">Ad Revenue 渠道 API 配置</a>
+      <a href="https://tenjin.com/zh/docs/difference-between-ad-mediation-ltv-and-ad-revenue-ltv/">两种 LTV 的区别</a>
+      <a href="https://tenjin.com/zh/blog/how-to-calculate-revenue-for-in-app-advertising-iaa/">如何计算 IAA 收入</a>
+    </div>
+    <h4>差多少算正常</h4>
+    <p>两种计算逻辑永远不会分毫不差，有差异本身不代表出了问题。良性原因包括：两套逻辑本身的差别、ILRD 信号里的出价本就是聚合平台的估算值、聚合平台与渠道之间的时区差、API 报表延迟或事后修正、以及数据量小的时候任何绝对差额看起来都像巨大的百分比。</p>
+    <p>如果两者差距 <b>20% 以上</b>，应引起重视，首先排查所有变现渠道是否加全，也可能是异常流量、集成缺陷等。</p>
+    <p><b>排查的锚点：</b>把 Tenjin 的两个数分别和它们各自的权威来源对——Ad Mediation 对聚合平台后台（MAX / AdMob），Ad Network 对各变现渠道后台之和。哪个对得上，哪个就是可信的那个，问题就定位在另一边。</p>
+  </div>
+</details>
+
+<details id="dashboard">
+  <summary><span class="n">8</span><span class="t">怎么看面板、用哪个工具导数</span><span class="chev">▶</span></summary>
+  <div class="body">
+    <h4>面板的基本操作</h4>
+    <p>UA 报表页面的四块区域，先认这四个就能用起来：</p>
+    <table>
+      <tr><th>位置</th><th>是什么</th><th>能做什么</th></tr>
+      <tr><td><b>左侧 · Filters</b></td><td>筛选器</td><td>按 App、日期区间、渠道（可只看付费）、国家等把数据范围缩小</td></tr>
+      <tr><td><b>左侧 · Breakdowns</b></td><td>数据拆分维度</td><td>选择按什么拆、拆几层。可选 App、Channel、Campaign、Country、Date、Site（子渠道）、Creative（素材），并可叠成层级，例如 App → 渠道 → Campaign → Site</td></tr>
+      <tr><td><b>右上 · Edit Metrics</b></td><td>指标选择</td><td>添加或删除你想看的指标列</td></tr>
+      <tr><td><b>表格里的 ▸ 小三角</b></td><td>逐层展开</td><td>按你设定的 Breakdown 层级一级一级往下钻</td></tr>
+    </table>
+    <div class="docs">
+      <a href="https://tenjin.com/zh/docs/filters-and-grouping/">筛选与分组</a>
+      <a href="https://tenjin.com/zh/docs/dashboard-metrics-list/">面板指标定义清单</a>
+      <a href="https://tenjin.com/zh/docs/tenjin-analysis/">四种数据分析类型</a>
+    </div>
+    <h4>有哪些报表</h4>
+    <table>
+      <tr><th>报表</th><th>看什么</th><th>文档</th></tr>
+      <tr><td><b>User Acquisition · Overview</b></td><td>买量总览：花费、安装、留存、LTV、ROAS，按买量渠道 / campaign 拆。下方还有常用图表</td><td><a href="https://tenjin.com/zh/docs/spend/">Spend</a> · <a href="https://tenjin.com/zh/docs/retention/">Retention</a></td></tr>
+      <tr><td><b>User Acquisition · In-App Events / Value / ROI 等</b></td><td>自定义事件的表现、用户价值相关指标、投入产出等</td><td><a href="https://tenjin.com/zh/docs/category/user-acquisition/">User Acquisition 文档</a></td></tr>
+      <tr><td><b>Ad Monetization</b></td><td>变现视角：你的 App 靠展示广告赚了多少</td><td><a href="https://tenjin.com/zh/docs/ad-monetization-report/">Ad Monetization 报表</a></td></tr>
+    </table>
+    <div class="note d"><p><b>最容易看混的一处：</b>Ad Monetization 报表<b>左侧的渠道筛选器是变现渠道，不是买量渠道</b>，两者是完全不同的合作方。UA 报表回答「我花钱买来的用户值不值」，Ad Monetization 报表回答「我的 App 一共赚了多少广告费」。</p></div>
+    <h4>导出工具怎么选</h4>
+    <table>
+      <tr><th>工具</th><th>粒度</th><th>适合谁</th></tr>
+      <tr><td><b>Aggregated Data Export（ADE）</b></td><td>聚合数据。可选日/周/月粒度、自选分组维度与指标，导 CSV，可存成常用报表。支持 User Acquisition 和 Ad Monetization 两类报表</td><td>习惯在 Excel 里做分析、直接在面板看数</td></tr>
+      <tr><td><b>Raw Data Export（RDE）</b></td><td>用户级明细事件，CSV，单次最多 30 天</td><td><b>要看具体明细、排查具体用户或日志问题</b>，或要把明细导进自己数仓</td></tr>
+      <tr><td><b>API</b>（涵盖以上 ADE、RDE）</td><td>程序化拉取，可定时同步到自己服务器</td><td>要建内部数仓 / 看板的技术团队</td></tr>
+    </table>
+    <p><b>选择建议：</b>日常看趋势用面板；要排查具体明细或某条事件为什么不对，用 RDE；要建长期自动同步，用 API；要一次性自己透视但量不大，直接 RDE 拉下来在 Excel 里做。</p>
+    <div class="docs">
+      <a href="https://tenjin.com/zh/docs/aggregated-data-exporter/">聚合数据导出</a>
+      <a href="https://tenjin.com/zh/docs/raw-data-exporter/">原始数据导出</a>
+      <a href="https://tenjin.com/zh/docs/automation-apis/">Automation API</a>
+      <a href="https://tenjin.com/zh/docs/api-access-tokens/">API 访问令牌</a>
+    </div>
+  </div>
+</details>
+
+<details id="latency">
+  <summary><span class="n">9</span><span class="t">哪些数据是实时的，哪些有延迟</span><span class="chev">▶</span></summary>
+  <div class="body">
+    <table>
+      <tr><th>类型</th><th>包括</th><th>延迟</th></tr>
+      <tr><td><b>基本实时</b></td><td>Tracked Installs、SDK 上报的各类事件（自定义事件、内购等）</td><td>实时</td></tr>
+      <tr><td><b>从渠道 API 拉取</b></td><td>Spend、Reported Installs、Reported Clicks、Reported Impressions，以及变现里的 Ad Revenue / Ad Network</td><td><b>每 2–3 小时拉取一次</b>，所以会有一点延迟</td></tr>
+      <tr><td><b>新登记的测试设备</b></td><td>Live Event Tool 里的显示</td><td><b>最多 3 小时</b>处理完后才会显示</td></tr>
+      <tr><td><b>客户端取归因信息（LiveOps）</b></td><td><code>getAttributionInfo()</code> 的返回</td><td>见下方说明</td></tr>
+    </table>
+    <div class="note w"><p><b>关于 LiveOps 的延迟：</b>从用户第一次打开 App 触发 SDK，到能从 LiveOps 取到归因信息，<b>大部分情况下能在几秒内</b>。但请注意，<b>这只是一个经验值，不是产品保证，不应作为硬性条件来设计逻辑。</b>实际耗时会随网络状况、地理位置、客户端环境、用户分布和产品类型而波动。<b>因此客户端必须实现轮询重试逻辑</b>——具体做法见 <a href="#s2">步骤 2</a>。</p></div>
+  </div>
+</details>
+
+<details id="getattr">
+  <summary><span class="n">10</span><span class="t">想把归因信息拿到自己手里</span><span class="chev">▶</span></summary>
+  <div class="body">
+    <p>很多团队需要在自己的系统里知道「这个用户是哪个渠道来的」。有两条路，按你在哪一端取来选：</p>
+    <table>
+      <tr><th></th><th>服务端要拿</th><th>客户端（App 内）要拿</th></tr>
+      <tr><td><b>用什么</b></td><td>S2S Callback（回传）</td><td>LiveOps：SDK 的 <code>getAttributionInfo()</code></td></tr>
+      <tr><td><b>怎么工作</b></td><td>Tenjin 在事件发生时主动请求你配置的 URL，把数据带在参数里</td><td>App 主动向 Tenjin 服务器查询本机的归因结果</td></tr>
+      <tr><td><b>能拿到什么</b></td><td>全部回传宏（callback macros）。归因类 <code>{{campaign_name}}</code> <code>{{ad_network}}</code> <code>{{click_id}}</code> <code>{{is_organic}}</code>；设备标识类 <code>{{advertising_id}}</code> <code>{{customer_user_id}}</code>；设备属性类 <code>{{country}}</code> <code>{{device_model}}</code>；事件类 <code>{{event}}</code> <code>{{revenue}}</code>；App 信息类 <code>{{bundle_id}}</code> <code>{{platform}}</code> 等。<b>完整清单见 <a href="https://tenjin.com/zh/docs/callback-macros/">回传参数宏文档</a></b></td><td><code>advertising_id</code>、<code>ad_network</code>、<code>campaign_id</code>、<code>campaign_name</code>、<code>site_id</code>、<code>creative_name</code>、<code>remote_campaign_id</code>、<code>deferred_deeplink_url</code>、<code>click_id</code>、<code>analytics_installation_id</code>、<code>referrer</code>、<code>referrer_params</code></td></tr>
+      <tr><td><b>要注意</b></td><td>配置后可做一次转化测试，确认端点真的能收到</td><td>需要 SDK 1.12.19+。<b>响应不保证实时</b>，要求实现重试逻辑</td></tr>
+    </table>
+    <p><code>getAttributionInfo</code> 只返回上面这些客户端字段。要更全的字段就走 S2S 回传。</p>
+    <div class="docs">
+      <a href="https://tenjin.com/zh/docs/server-to-server-s2s-callbacks/">S2S 回传</a>
+      <a href="https://tenjin.com/zh/docs/liveops-campaigns/">LiveOps</a>
+    </div>
+  </div>
+</details>
+
+<details id="deeplink">
+  <summary><span class="n">11</span><span class="t">深度链接（Deferred Deep Link）</span><span class="chev">▶</span></summary>
+  <div class="body">
+    <p><b>解决什么问题：</b>用户点了你某个具体内容 / 游戏的广告，装完打开 App 之后直接落到那个页面，而不是默认首页。</p>
+    <p><b>三步：</b></p>
+    <ol>
+      <li><b>App 侧</b>实现自己的 URL scheme（例如 <code>myschema://</code>），并写好从 scheme 到具体页面的路由逻辑。<b>路由这一段是你们自己实现的</b>，Tenjin 只负责把值传给你。</li>
+      <li><b>链接侧</b>在 Tenjin 追踪链接后面追加 <code>deeplink_url</code> 参数，每个投放目标用不同的值。例如：<br><code>https://track.tenjin.io/v0/xxx/campaignid123?advertising_id={advertising_id}&amp;click_id={click_id}&amp;deeplink_url=myschema://shoe1</code></li>
+      <li><b>SDK 侧</b>在 <code>Connect()</code> 之后调用 <code>getAttributionInfo()</code>，从返回结果的 <code>deferred_deeplink_url</code> 字段里取到这个值，交给你自己的路由。</li>
+    </ol>
+    <div class="note w"><p><b>重要边界：这个能力只服务尚未安装的用户。</b></p></div>
+    <div class="docs"><a href="https://tenjin.com/zh/docs/deferred-deep-linking/">延迟深度链接</a></div>
+  </div>
+</details>
+
+<details id="testing">
+  <summary><span class="n">12</span><span class="t">怎么做测试</span><span class="chev">▶</span></summary>
+  <div class="body">
+    <h4>登记测试设备（看事件有没有进来）</h4>
+    <p>面板路径：<b>Diagnose → Test Devices → + New Test Device</b></p>
+    <ol>
+      <li>选择对应的 App，填入设备的广告 ID。<b>iOS 填 IDFA，Android 填 GAID</b>（iOS 设备也可填 IDFV）。</li>
+      <li><b>刚登记完会有一定延迟。</b>官方要求：「please allow up to 3 hours before you fire the event」——最多等 3 小时再触发事件。</li>
+      <li>之后触发的事件会实时出现在 Live Event Tool 里。</li>
+    </ol>
+    <p><b>四条必须知道的规则：</b></p>
+    <ul>
+      <li><b>测试设备的数据不会进报表。</b>官方原文：「Any events sent through a test device… will not get recorded in the dashboard reporting.」这个工具只用来验证，不污染正式数据。反过来说，在 Live Event Tool 里看不到不代表数据没进系统——原始数据里可能是有的。</li>
+      <li><b>不要用 TestFlight 测。</b>按 Apple 政策，TestFlight 每次启动都会换一个新的 <code>advertising_id</code>，永远匹配不上登记的设备，事件也就永远不显示。</li>
+      <li><b>Live Event 是按登记的设备 ID 过滤的。</b>换了 bundle、重装过、重置过广告 ID，都可能导致原来登记的 ID 不再匹配，需要重新登记。</li>
+      <li><b>渠道回传测不出来。</b>测试设备只记录进入 Tenjin 的测试事件；发给渠道的回传要等真实投放跑起来、且有真实归因安装之后才会产生。</li>
+    </ul>
+    <div class="docs"><a href="https://tenjin.com/zh/docs/check-sdk-status/">检查 SDK 状态</a></div>
+
+    <h4>做一次转化测试（看归因链路通不通）</h4>
+    <p>如果要验证「点击 → 安装 → 归因」整条链路，用转化测试。</p>
+    <p><b>前提：</b>App 已加入面板 · SDK 已成功集成 · 面板里激活回调已开启 · 用一台<b>从未下载过这个 App</b> 的设备。</p>
+    <ol>
+      <li><b>准备测试设备。</b>如果之前装过，先卸载并重置设备标识。iOS：重置 IDFA；IDFV 会在你删掉该开发者的全部 App 后重装时自动刷新。Android：重置广告 ID。</li>
+      <li><b>取追踪链接。</b>在面板的 campaign 页复制点击追踪 URL。</li>
+      <li><b>替换 advertising_id 宏。</b>把链接里的 <code>advertising_id</code> 占位符换成你这台设备的真实广告 ID（iOS 可用 App Store 上的 Identifiers 类工具查 IDFA）。</li>
+      <li><b>改 campaign_id 参数。</b>如果链接里带 <code>campaign_id</code>，把值改成 <code>test</code>，这样测试数据会落在对应的 campaign 名下便于查找。</li>
+      <li><b>在设备浏览器里打开这条链接</b>（不要用邮件或其它客户端打开），然后从商店下载并安装 App。</li>
+      <li><b>回面板核对</b>这次测试安装的数据。</li>
+    </ol>
+    <div class="docs"><a href="https://tenjin.com/zh/docs/run-a-conversion-test/">运行转化测试（完整步骤）</a></div>
+
+    <h4>验收看哪里</h4>
+    <p>App 的 <b>Configure</b> 页有 SDK 集成状态表，会显示 app 版本、会话、Ad Mediation 展示（ILRD）、带收据的 IAP、自定义事件等各项是否收到。<b>这张表是判断「接入到底成没成」的主要标准。</b></p>
+    <div class="note g"><p>橙色的 <b>not received</b> 只代表当前没有收到这种事件，<b>不代表你的集成一定有问题</b>——比如你还没接内购，那一行本来就该是 not received。</p></div>
+  </div>
+</details>
+
+</div>
+
+<!-- ══════════ PART 3 ══════════ -->
+<div class="part" id="p3">
+  <h2><span class="pn">3</span>排查</h2>
+  <p>数据对不上的时候，从这里开始。</p>
+</div>
+
+<div class="list">
+
+<details id="checklist">
+  <summary><span class="n">A</span><span class="t">数据不一致排查清单</span><span class="pill hot">最常用</span><span class="chev">▶</span></summary>
+  <div class="body">
+    <div class="note i">
+      <p><b>第一步：先排除口径问题。</b>任何对比开始之前，先过这四条：</p>
+      <ol>
+        <li><b>两边时区都是 UTC+0 吗？</b>Tenjin 面板固定 UTC+0。（<a href="#timezone">见第 5 节</a>）</li>
+        <li><b>比较的时间范围完全一致吗？</b></li>
+        <li><b>比的是同一类指标吗？</b>指标名带「N-Day」的是同期群指标，按安装日分组；不带的是按事件发生当天统计的日常指标。这两类不能混着比。（<a href="#cohort">见第 6 节</a>）</li>
+        <li><b>比的是 Tracked 还是 Reported？</b>Tracked 是 Tenjin 的独立归因结果，Reported 是渠道自己上报的，两者本来就不一样。正常差异：自归因（SAN）渠道可达 30%，非自归因渠道约 10%。（<a href="#tracked">见第 2 节</a>）</li>
+      </ol>
+    </div>
+
+    <div class="qa">
+      <div class="q">分支 A：Tenjin 的安装数和渠道后台对不上</div>
+      <ul>
+        <li>差异是否已经在正常范围内（SAN 30% / 非 SAN 10%）？在范围内就不必再查。</li>
+        <li><b>Google Ads</b>：Tenjin 的转化动作设成 Primary 了吗？设 Firebase 为主要会让 Tracked 和 Reported 的差异明显变大。（<a href="#google">见 3.2</a>）</li>
+        <li><b>Meta</b>：AMM 条款签了吗？Meta 可能会遮蔽一些数据。（<a href="#meta">见 3.1</a>）</li>
+        <li><b>回传开关</b>：渠道后台显示安装为 0 的话，先确认 Tenjin 侧该渠道的回传开关是打开的。</li>
+        <li><b>Callback Health</b>：绿色 100% 才代表回传全部成功送达；标黄或标红说明有部分被渠道拒绝了。（<a href="#s5">见步骤 5</a>）</li>
+        <li>App 里是不是还装了渠道自己的 SDK？两套 SDK 都上报，会让渠道侧的 Reported 多记一次。</li>
+      </ul>
+    </div>
+
+    <div class="qa">
+      <div class="q">分支 B：安装大量落到 Organic / 自然量异常高</div>
+      <p>一个安装被记成 Organic 只有一个含义：归因窗口内没找到能匹配这台设备的广告互动。按顺序查这三件事：</p>
+      <ol>
+        <li><b>广告点击有没有进来。</b>去 Tenjin 面板上该 campaign 的详情页看点击数（非自归因）。如果点击是 0、渠道 Campaign ID 一直显示 unknown，去查追踪链接的宏映射。</li>
+        <li><b>投放的渠道有没有在面板里授权配置。</b></li>
+        <li><b>设备标识有没有采到。</b>Android 约 5% 拿不到 GAID 属正常，iOS 拒绝 ATT 的用户拿不到 IDFA；但如果是接近 100% 采不到，那是集成问题。</li>
+      </ol>
+    </div>
+
+    <div class="qa">
+      <div class="q">分支 C：广告变现收入对不上</div>
+      <p>先确认你比的是哪个口径——<b>Ad Mediation（来自聚合）</b>还是 <b>Ad Network（来自 API）</b>。两者机制不同，本来就不会一致。（<a href="#revenue">见第 7 节</a>）</p>
+      <ul>
+        <li>差距 20% 以上按故障处理。</li>
+        <li><b>Ad Mediation 是 0 或明显偏低</b>：Tenjin 的监听插件装了吗？Health 区块里是否有未映射的广告位？</li>
+        <li><b>Ad Network 明显偏低</b>：每一个变现渠道都单独添加并授权了吗？只加聚合平台的发布商账号是不够的。</li>
+        <li><b>总量接近，但 0 日 Ad ROAS 差很多、7/14/30 日又收敛</b>：这是两种算法的方法论差异，不是数据问题。ROAS 请用 Ad Mediation。</li>
+      </ul>
+    </div>
+
+    <div class="qa">
+      <div class="q">分支 D：内购收入对不上</div>
+      <ul>
+        <li><b>SDK 集成状态表里「Valid Purchase Event」亮了吗？</b>没亮说明收据没送到或没通过校验——检查文档里的内购事件收据校验部分。</li>
+        <li><b>想看具体是哪几笔有问题</b>：用 Raw Data Export 导出 purchase 事件，看 <code>purchase_state</code> 字段判断是否通过了校验。</li>
+      </ul>
+    </div>
+
+    <div class="qa">
+      <div class="q">分支 E：数据看起来少了一块 / 今天的数还没出来</div>
+      <p>先确认这个指标本来有没有延迟：<b>实时</b>的是 Tracked Installs、SDK 上报的各类事件；<b>每 2–3 小时更新一次</b>的是 Spend、Reported Installs / Clicks / Impressions，以及 Ad Revenue（Ad Network）。这类数据当天看偏低是正常的。（<a href="#latency">见第 9 节</a>）</p>
+    </div>
+
+    <div class="qa">
+      <div class="q">分支 F：事件在 Live Event Tool 里看不到</div>
+      <ul>
+        <li>测试设备刚登记的话，最多要等 3 小时。</li>
+        <li>登记的 ID 对吗？iOS 填 IDFA；Android 填 GAID。</li>
+        <li>是不是用 TestFlight 在测？TestFlight 每次启动都换 <code>advertising_id</code>，永远匹配不上。</li>
+        <li>换过 bundle、重装过、重置过广告 ID，都需要重新登记设备。</li>
+        <li>Live Event 里没有 ≠ 数据没进来，去 Raw Data Export 里确认。</li>
+      </ul>
+    </div>
+
+    <div class="qa">
+      <div class="q">分支 G：自己用 API 拉的数和面板对不上</div>
+      <ul>
+        <li>定时任务加 3 天回溯窗口。拉 T-1 数据太早，ETL 还没跑完，D0 收入会偏低。</li>
+        <li><code>read_timeout</code> 设 180–300 秒，<code>per_page</code> 设 1000。</li>
+      </ul>
+    </div>
+
+    <div class="note d">
+      <p><b>还是对不上？</b>以上都核对过仍然对不上，就联系我们，并附上：<b>App 名称和平台 · 具体时间区间 · 涉及哪个渠道 · 已完成的配置步骤截图 · 如果是对账问题，附上对比方的截图。</b></p>
+    </div>
+  </div>
+</details>
+
+</div>
+
+<!-- ══════════ PART 4 ══════════ -->
+<div class="part" id="p4">
+  <h2><span class="pn">4</span>需要帮助</h2>
+  <p>四个途径，按问题类型选。</p>
+</div>
+
+<div class="cards">
+  <div class="card">
+    <div class="ic">💬</div>
+    <b>微信联系我们</b>
+    <span>商务微信：<b>tenjinbd</b><br>可以拉对接群，接入和上线后的问题都能在群里直接沟通。</span>
+  </div>
+  <div class="card">
+    <div class="ic">🤖</div>
+    <b>面板内 AI 问答助手</b>
+    <span>Tenjin 面板<b>右下角</b>的 AI 问答助手可以解决一些常见问题。</span>
+    <a href="https://dashboard.tenjin.com/dashboard">打开 Tenjin 面板 ↗</a>
+  </div>
+  <div class="card">
+    <div class="ic">⚡</div>
+    <b>Tenjin MCP</b>
+    <span>如果你们在用 Claude / ChatGPT 等 AI 工具，可以接入 Tenjin MCP，让 AI 直接帮你查数据、排查配置。</span>
+    <a href="https://tenjin.com/zh/docs/getting-started-with-tenjins-mcp-server/">MCP 介绍文档 ↗</a>
+  </div>
+  <div class="card">
+    <div class="ic">📚</div>
+    <b>Tenjin 官方文档</b>
+    <span>全部产品文档，中文版。</span>
+    <a href="https://tenjin.com/zh/docs/">tenjin.com/zh/docs ↗</a>
+  </div>
+</div>
+
+<div class="empty" id="empty">没有匹配的内容。</div>
+
+<footer>Tenjin 中国区技术支持 · 本页持续更新</footer>
+</div>
+
+<script>
+(function(){
+'use strict';
+function openTo(id){
+  if(!id) return;
+  var el=document.getElementById(id); if(!el) return;
+  var n=el; while(n){ if(n.tagName==='DETAILS') n.open=true; n=n.parentElement; }
+  setTimeout(function(){
+    el.scrollIntoView({behavior:'smooth',block:'start'});
+    if(el.tagName==='DETAILS'){ el.classList.remove('hit'); void el.offsetWidth; el.classList.add('hit'); }
+  },60);
+}
+window.addEventListener('DOMContentLoaded',function(){
+  if(location.hash) openTo(decodeURIComponent(location.hash.slice(1)));
+
+  // in-page links should expand their target
+  document.querySelectorAll('a[href^="#"]').forEach(function(a){
+    a.addEventListener('click',function(e){
+      var id=decodeURIComponent(a.getAttribute('href').slice(1));
+      if(id && document.getElementById(id)){ e.preventDefault(); history.replaceState(null,'','#'+id); openTo(id); }
+    });
+  });
+
+  // copy-link button per section
+  document.querySelectorAll('details[id]').forEach(function(d){
+    var s=d.querySelector('summary'); if(!s) return;
+    var b=document.createElement('button');
+    b.className='lk'; b.type='button'; b.title='复制本节链接'; b.textContent='🔗';
+    b.addEventListener('click',function(e){
+      e.preventDefault(); e.stopPropagation();
+      var url=location.origin+location.pathname+'#'+d.id;
+      var done=function(){ b.textContent='✓'; b.classList.add('ok');
+        setTimeout(function(){ b.textContent='🔗'; b.classList.remove('ok'); },1300); };
+      if(navigator.clipboard&&navigator.clipboard.writeText){
+        navigator.clipboard.writeText(url).then(done,function(){ window.prompt('复制这个链接：',url); });
+      } else { window.prompt('复制这个链接：',url); }
+    });
+    var c=s.querySelector('.chev'); if(c) s.insertBefore(b,c); else s.appendChild(b);
+  });
+
+  // search
+  var q=document.getElementById('q'); if(!q) return;
+  var items=[].slice.call(document.querySelectorAll('details'));
+  var empty=document.getElementById('empty');
+  var chrome=[].slice.call(document.querySelectorAll('.part,.note.i,.cards,.lede'));
+  function run(){
+    var v=q.value.trim().toLowerCase();
+    if(!v){
+      items.forEach(function(d){ d.style.display=''; d.open=false; });
+      document.querySelectorAll('.list').forEach(function(l){ l.style.display=''; });
+      chrome.forEach(function(g){ g.style.display=''; });
+      empty.style.display='none'; return;
+    }
+    chrome.forEach(function(g){ g.style.display='none'; });
+    var n=0;
+    items.forEach(function(d){
+      var hit=d.textContent.toLowerCase().indexOf(v)!==-1;
+      d.style.display=hit?'':'none'; d.open=hit; if(hit)n++;
+    });
+    document.querySelectorAll('.list').forEach(function(l){
+      var any=[].slice.call(l.querySelectorAll('details')).some(function(d){return d.style.display!=='none';});
+      l.style.display=any?'':'none';
+    });
+    empty.style.display=n?'none':'block';
+  }
+  q.addEventListener('input',run);
+  q.addEventListener('keydown',function(e){ if(e.key==='Escape'){ q.value=''; run(); q.blur(); } });
+});
+})();
+</script>
+</body>
+</html>
