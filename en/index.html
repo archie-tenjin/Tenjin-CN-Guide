@@ -1,0 +1,1753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta name="description" content="Tenjin onboarding guide: setup steps, data definitions and troubleshooting checklist.">
+<title>Tenjin Onboarding Guide</title>
+<style>
+:root{
+  --ink:#161b22; --ink2:#5a6572; --ink3:#8b95a1;
+  --line:#e3e8ee; --line2:#d0d7de; --bg:#fff; --soft:#f7f9fb; --soft2:#eef2f6;
+  --acc:#0b6bcb; --accSoft:#e7f1fc;
+  --ok:#116d3a; --okSoft:#e3f7ec;
+  --wa:#8a5a00; --waSoft:#fff4d6;
+  --da:#b3261e; --daSoft:#fdeceb;
+  --hl:#fff2b8;
+  --r:12px;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --ink:#e6edf3; --ink2:#9aa4b1; --ink3:#6e7a88;
+    --line:#262c34; --line2:#333b45; --bg:#0d1117; --soft:#141a21; --soft2:#1b222b;
+    --acc:#5aa2f5; --accSoft:#122033;
+    --ok:#4cc06a; --okSoft:#0f2419;
+    --wa:#d9a441; --waSoft:#282013;
+    --da:#f07167; --daSoft:#2b1615;
+    --hl:#3d3618;
+  }
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:64px}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font:15px/1.75 -apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",Segoe UI,sans-serif;
+  -webkit-font-smoothing:antialiased}
+a{color:var(--acc);text-decoration:none}
+a:hover{text-decoration:underline}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.87em;
+  background:var(--soft2);padding:1.5px 6px;border-radius:5px;word-break:break-all}
+b,strong{font-weight:650}
+
+/* top */
+.top{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.88);
+  backdrop-filter:saturate(180%) blur(12px);border-bottom:1px solid var(--line)}
+@media (prefers-color-scheme:dark){.top{background:rgba(13,17,23,.88)}}
+.topin{max-width:940px;margin:0 auto;padding:0 22px;display:flex;align-items:center;gap:18px;height:56px}
+.brand{font-weight:700;font-size:15px;color:var(--ink);white-space:nowrap}
+.brand:hover{text-decoration:none}
+nav{display:flex;gap:2px;flex:1;overflow-x:auto;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+nav a{font-size:14px;padding:6px 12px;border-radius:8px;color:var(--ink2);white-space:nowrap}
+nav a:hover{background:var(--soft2);text-decoration:none;color:var(--ink)}
+#q{width:150px;padding:7px 12px;border:1px solid var(--line2);border-radius:9px;
+  background:var(--soft);color:var(--ink);font-size:13.5px;font-family:inherit;outline:none;transition:.15s}
+#q:focus{border-color:var(--acc);background:var(--bg);width:200px}
+#q::placeholder{color:var(--ink3)}
+
+.wrap{max-width:940px;margin:0 auto;padding:34px 22px 100px}
+h1{font-size:27px;margin:0 0 8px;letter-spacing:-.02em;font-weight:700}
+.lede{color:var(--ink2);font-size:15px;margin:0 0 26px;max-width:660px}
+
+/* part header */
+.part{margin:52px 0 16px;padding-top:6px}
+.part:first-of-type{margin-top:34px}
+.part h2{font-size:19px;margin:0 0 3px;letter-spacing:-.01em;display:flex;align-items:center;gap:9px}
+.part .pn{width:25px;height:25px;border-radius:7px;background:var(--acc);color:#fff;
+  font-size:13px;display:flex;align-items:center;justify-content:center;font-weight:600;flex:none}
+.part p{margin:0 0 0 34px;color:var(--ink2);font-size:14px}
+
+/* collapsibles */
+.list{border:1px solid var(--line);border-radius:var(--r);overflow:hidden;background:var(--bg)}
+details{border-bottom:1px solid var(--line);scroll-margin-top:64px}
+details:last-child{border-bottom:0}
+details[open]{background:var(--soft)}
+details.hit{animation:flash 1.8s ease-out}
+@keyframes flash{0%,45%{background:var(--hl)}100%{background:var(--soft)}}
+summary{list-style:none;cursor:pointer;padding:13px 16px;display:flex;align-items:center;gap:12px;font-size:15px}
+summary::-webkit-details-marker{display:none}
+summary:hover{background:var(--soft2)}
+details[open] summary{border-bottom:1px solid var(--line)}
+.n{flex:none;min-width:26px;height:26px;padding:0 7px;border-radius:8px;background:var(--soft2);
+  border:1px solid var(--line2);color:var(--ink2);font-size:12.5px;font-weight:600;
+  display:flex;align-items:center;justify-content:center;font-variant-numeric:tabular-nums}
+details[open] .n{background:var(--acc);border-color:var(--acc);color:#fff}
+.t{flex:1;font-weight:640;min-width:0}
+.pill{flex:none;font-size:11.5px;padding:2px 9px;border-radius:20px;white-space:nowrap;font-weight:600}
+.pill.hot{background:var(--daSoft);color:var(--da)}
+.pill.opt{background:transparent;color:var(--ink3);font-weight:500;padding:0}
+.pill.key{background:var(--waSoft);color:var(--wa)}
+.lk{flex:none;border:0;background:transparent;color:var(--ink3);cursor:pointer;font-size:13px;
+  padding:3px 6px;border-radius:6px;opacity:0;transition:.12s;font-family:inherit}
+summary:hover .lk{opacity:1}
+.lk:hover{background:var(--soft2);color:var(--acc)}
+.lk.ok{opacity:1;color:var(--ok)}
+.chev{flex:none;color:var(--ink3);font-size:10px;transition:transform .18s}
+details[open] .chev{transform:rotate(90deg)}
+.body{padding:16px 20px 20px 20px;font-size:14.5px}
+.body>*:first-child{margin-top:0}
+.body>*:last-child{margin-bottom:0}
+.body p{margin:11px 0}
+.body ul,.body ol{margin:11px 0;padding-left:22px}
+.body li{margin:6px 0}
+.body h4{font-size:13px;margin:22px 0 9px;color:var(--ink2);font-weight:650;letter-spacing:.04em}
+
+/* do / accept rows */
+.do{background:var(--soft2);border-radius:10px;padding:11px 14px;font-size:14.5px;margin:0 0 12px}
+.do b{color:var(--ink2);font-size:12.5px;letter-spacing:.03em;display:block;margin-bottom:2px}
+details[open] .do{background:var(--bg);border:1px solid var(--line)}
+.acc{display:flex;gap:9px;align-items:flex-start;background:var(--okSoft);color:var(--ok);
+  border-radius:10px;padding:10px 14px;font-size:14px;margin:12px 0;font-weight:550}
+.acc::before{content:"✓";font-weight:700;flex:none}
+
+/* 官方文档块：每节的主入口 */
+.docs{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:12px 0 14px;
+  padding:11px 13px;border-radius:11px;background:var(--accSoft);border:1px solid var(--accLine)}
+.docs::before{content:"📖 Official docs";flex:0 0 100%;font-size:12px;font-weight:700;color:var(--acc);letter-spacing:.04em;margin:-1px 0 1px}
+.docs a{display:inline-flex;align-items:center;gap:6px;font-size:13.5px;font-weight:600;padding:6px 13px;
+  border-radius:8px;color:#fff;background:var(--acc);transition:.13s;line-height:1.4}
+.docs a::after{content:"↗";font-size:11px;opacity:.85}
+.docs a:hover{text-decoration:none;filter:brightness(1.1);box-shadow:0 2px 8px rgba(11,107,203,.25)}
+.qa .docs{padding:8px 11px;margin:10px 0 4px}
+.qa .docs::before{content:"📖 Related step in the docs"}
+:root{--accLine:#c4dcf6}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--accLine:#1f3b5c}}
+:root[data-theme=dark]{--accLine:#1f3b5c}
+:root[data-theme=light]{--accLine:#c4dcf6}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]) .docs a{color:#0d1117}}
+:root[data-theme=dark] .docs a{color:#0d1117}
+.docs.go{background:var(--waSoft);border-color:var(--waSoft)}
+.docs.go::before{content:"👉 Open directly";color:var(--wa)}
+.docs.go a:first-child{background:var(--wa)}
+table td:first-child,table th:first-child{min-width:5.2em}
+.dlab-mini{font-style:normal;font-weight:700;color:var(--acc);white-space:nowrap}
+
+/* 顶部导航提示 */
+.hub{display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap;
+  border:1px solid var(--accLine);background:var(--accSoft);border-radius:12px;padding:14px 16px;margin:0 0 16px}
+.hubt{flex:1 1 380px;min-width:0}
+.hubt b{display:block;font-size:15px;margin-bottom:3px}
+.hubt span{font-size:14px;color:var(--ink2);line-height:1.7}
+.hubbtn{flex:none;background:var(--acc);color:#fff;font-weight:650;font-size:14px;padding:9px 16px;border-radius:9px;white-space:nowrap}
+.hubbtn:hover{text-decoration:none;filter:brightness(1.1)}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]) .hubbtn{color:#0d1117}}
+:root[data-theme=dark] .hubbtn{color:#0d1117}
+@media print{.docs a,.hubbtn{color:#fff!important;background:#0b5aa8!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+
+/* Q&A cards */
+.qa{border-left:3px solid var(--line2);padding:2px 0 2px 14px;margin:14px 0}
+.qa.hot{border-left-color:var(--da)}
+.qa.key{border-left-color:var(--wa)}
+.qa>.q{font-weight:650;margin:0 0 4px;font-size:14.5px}
+.qa.hot>.q{color:var(--da)}
+.qa>p{margin:5px 0}
+.qa ul,.qa ol{margin:7px 0}
+
+/* callouts */
+.note{border-radius:10px;padding:12px 15px;font-size:14.5px;margin:14px 0;border:1px solid transparent}
+.note p{margin:6px 0}
+.note>*:first-child{margin-top:0}.note>*:last-child{margin-bottom:0}
+.note.i{background:var(--accSoft);border-color:var(--accSoft)}
+.note.w{background:var(--waSoft);border-color:var(--waSoft)}
+.note.d{background:var(--daSoft);border-color:var(--daSoft)}
+.note.g{background:var(--okSoft);border-color:var(--okSoft)}
+
+/* tables */
+table{width:100%;border-collapse:separate;border-spacing:0;border:1px solid var(--line);
+  border-radius:10px;overflow:hidden;margin:13px 0;font-size:13.8px;line-height:1.65}
+th{background:var(--soft2);text-align:left;font-weight:650;font-size:13px;color:var(--ink2)}
+th,td{padding:9px 13px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+details[open] table{background:var(--bg)}
+
+/* help cards */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:12px;margin:14px 0}
+.card{border:1px solid var(--line);border-radius:var(--r);padding:15px 17px;background:var(--bg);transition:.15s}
+.card:hover{border-color:var(--line2);box-shadow:0 2px 10px rgba(0,0,0,.045)}
+.card .ic{font-size:19px;line-height:1;margin-bottom:8px}
+.card b{display:block;font-size:14.5px;margin-bottom:4px}
+.card span{font-size:13.5px;color:var(--ink2);line-height:1.65;display:block}
+.card a{font-size:13.5px;display:inline-block;margin-top:7px;word-break:break-all}
+
+.empty{display:none;color:var(--ink3);font-size:14px;padding:26px 4px}
+footer{margin-top:54px;padding-top:20px;border-top:1px solid var(--line);font-size:13px;color:var(--ink3)}
+
+
+
+/* ═══════════════ 主题手动切换 ═══════════════ */
+:root[data-theme=light]{
+  --ink:#161b22; --ink2:#5a6572; --ink3:#8b95a1;
+  --line:#e3e8ee; --line2:#d0d7de; --bg:#fff; --soft:#f7f9fb; --soft2:#eef2f6;
+  --acc:#0b6bcb; --accSoft:#e7f1fc;
+  --ok:#116d3a; --okSoft:#e3f7ec;
+  --wa:#8a5a00; --waSoft:#fff4d6;
+  --da:#b3261e; --daSoft:#fdeceb;
+  --hl:#fff2b8;
+  color-scheme:light;
+}
+:root[data-theme=dark]{
+  --ink:#e6edf3; --ink2:#9aa4b1; --ink3:#6e7a88;
+  --line:#262c34; --line2:#333b45; --bg:#0d1117; --soft:#141a21; --soft2:#1b222b;
+  --acc:#5aa2f5; --accSoft:#122033;
+  --ok:#4cc06a; --okSoft:#0f2419;
+  --wa:#d9a441; --waSoft:#282013;
+  --da:#f07167; --daSoft:#2b1615;
+  --hl:#3d3618;
+  color-scheme:dark;
+}
+
+/* ═══════════════ 布局：侧边栏 + 正文 ═══════════════ */
+html{scroll-padding-top:24px}
+body{margin:0}
+.app{display:flex;align-items:flex-start;min-height:100vh}
+
+.side{position:sticky;top:0;height:100vh;flex:0 0 274px;
+  background:var(--soft);border-right:1px solid var(--line);
+  display:flex;flex-direction:column;overflow:hidden;z-index:60}
+.sbrand{display:flex;gap:11px;padding:17px 17px 13px;align-items:flex-start}
+.logo{width:31px;height:31px;border-radius:9px;background:var(--acc);color:#fff;font-weight:700;
+  display:flex;align-items:center;justify-content:center;flex:none;font-size:15px;letter-spacing:-.02em}
+.sbrand b{display:block;font-size:14px;line-height:1.35;color:var(--ink)}
+.sbrand em{display:block;font-size:11.5px;color:var(--ink3);margin-top:3px;font-style:normal}
+.sctl{padding:0 17px 11px}
+.side #q{width:100%;padding:7px 11px;border:1px solid var(--line2);border-radius:9px;
+  background:var(--bg);color:var(--ink);font-size:13.5px;font-family:inherit;outline:none;transition:.15s}
+.side #q:focus{border-color:var(--acc);width:100%;box-shadow:0 0 0 3px var(--accSoft)}
+.side #q::placeholder{color:var(--ink3)}
+
+.prog{padding:0 17px 13px}
+.plab{display:flex;justify-content:space-between;align-items:baseline;font-size:11.5px;color:var(--ink3);margin-bottom:5px}
+.plab b{color:var(--ink2);font-weight:600}
+.plab button{border:0;background:none;color:var(--ink3);font:inherit;font-size:11.5px;cursor:pointer;padding:0;text-decoration:underline}
+.plab button:hover{color:var(--acc)}
+.pbar{height:5px;border-radius:3px;background:var(--soft2);overflow:hidden}
+.pbar i{display:block;height:100%;width:0;background:var(--ok);border-radius:3px;transition:width .3s ease}
+
+.toc{display:block;flex:1 1 auto;min-height:0;overflow-y:auto;padding:2px 9px 14px;overscroll-behavior:contain}
+.toc::-webkit-scrollbar{width:8px}
+.toc::-webkit-scrollbar-thumb{background:var(--line2);border-radius:4px;border:2px solid var(--soft)}
+.toc .g{font-size:10.5px;letter-spacing:.09em;color:var(--ink3);font-weight:700;
+  margin:15px 9px 5px;text-transform:uppercase}
+.toc .g:first-child{margin-top:6px}
+.toc a{display:flex;gap:8px;align-items:baseline;padding:5px 9px;border-radius:7px;
+  font-size:13px;color:var(--ink2);line-height:1.45;white-space:normal}
+.toc a:hover{background:var(--soft2);text-decoration:none;color:var(--ink)}
+.toc a.on{background:var(--accSoft);color:var(--acc);font-weight:600}
+.toc a .k{flex:none;min-width:22px;color:var(--ink3);font-size:11.5px;font-variant-numeric:tabular-nums}
+.toc a.on .k{color:var(--acc)}
+.toc a.done .k{color:var(--ok)}
+.toc a.done .k::after{content:" ✓"}
+.toc a.hide{display:none}
+.toc a.g{display:block;font-size:10.5px;letter-spacing:.09em;color:var(--ink3);font-weight:700;
+  margin:16px 4px 4px;padding:0 5px;text-transform:uppercase;line-height:1.4}
+.toc a.g:first-child{margin-top:6px}
+.toc a.g:hover{background:none;color:var(--acc);text-decoration:none}
+.toc a.g.hide{display:none}
+
+.sfoot{border-top:1px solid var(--line);padding:9px;display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.sfoot button{font-family:inherit;font-size:12.5px;padding:7px 5px;border:1px solid var(--line2);
+  border-radius:8px;background:var(--bg);color:var(--ink2);cursor:pointer;transition:.13s;white-space:nowrap}
+.sfoot button:hover{border-color:var(--acc);color:var(--acc);background:var(--accSoft)}
+
+.main{flex:1;min-width:0}
+.wrap{max-width:880px;margin:0 auto;padding:36px 36px 110px}
+
+/* 顶部条（仅窄屏） */
+.mtop{display:none;position:sticky;top:0;z-index:40;align-items:center;gap:12px;height:52px;padding:0 14px;
+  background:var(--bg);border-bottom:1px solid var(--line)}
+.mtop b{font-size:14.5px;font-weight:650}
+#burger{border:1px solid var(--line2);background:var(--bg);color:var(--ink);border-radius:8px;
+  width:34px;height:34px;font-size:15px;cursor:pointer;flex:none;line-height:1}
+.scrim{display:none;position:fixed;inset:0;background:rgba(0,0,0,.42);z-index:55}
+body.nav .scrim{display:block}
+
+/* 声明条 */
+.vban{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline;
+  border:1px solid var(--line);border-left:3px solid var(--acc);border-radius:10px;
+  padding:10px 14px;margin:0 0 22px;font-size:12.5px;color:var(--ink2);background:var(--soft)}
+.vban b{color:var(--ink);font-weight:650}
+.vban span{color:var(--ink3)}
+
+/* 步骤勾选 */
+.ck{flex:none;width:18px;height:18px;border:1.5px solid var(--line2);border-radius:5px;background:var(--bg);
+  display:flex;align-items:center;justify-content:center;font-size:11px;line-height:1;
+  color:transparent;cursor:pointer;transition:.13s;padding:0}
+.ck:hover{border-color:var(--ok);background:var(--okSoft)}
+details.done>summary .ck{background:var(--ok);border-color:var(--ok);color:#fff}
+details.done>summary .t{color:var(--ink3)}
+
+mark{background:var(--hl);color:inherit;border-radius:3px;padding:0 1px}
+
+/* 打印目录（仅出现在 PDF / 打印件中） */
+.ptoc{display:none}
+@media print{
+  .ptoc{display:block;break-after:page;margin:0 0 10px}
+  .ptoc h2{font-size:15pt;margin:0 0 14px}
+  .ptoc .pg{margin:14px 0 5px;font-size:11pt;font-weight:700;color:var(--acc)}
+  .ptoc ul{list-style:none;margin:0;padding:0;column-count:2;column-gap:26px}
+  .ptoc li{font-size:9.5pt;line-height:1.85;break-inside:avoid;color:#333}
+  .ptoc li i{font-style:normal;color:#888;display:inline-block;min-width:24px}
+}
+
+#totop{position:fixed;right:20px;bottom:20px;z-index:45;width:38px;height:38px;border-radius:50%;
+  border:1px solid var(--line2);background:var(--bg);color:var(--ink2);font-size:15px;cursor:pointer;
+  opacity:0;pointer-events:none;transition:.2s;box-shadow:0 2px 12px rgba(0,0,0,.09)}
+#totop.show{opacity:1;pointer-events:auto}
+#totop:hover{border-color:var(--acc);color:var(--acc)}
+
+.skip{position:absolute;left:-9999px}
+.skip:focus{left:8px;top:8px;z-index:99;background:var(--bg);padding:8px 12px;border:1px solid var(--acc);border-radius:8px}
+
+/* ═══════════════ 窄屏 ═══════════════ */
+@media(max-width:900px){
+  .side{position:fixed;left:0;top:0;width:282px;flex-basis:282px;
+    transform:translateX(-100%);transition:transform .22s ease;box-shadow:0 0 40px rgba(0,0,0,.22)}
+  body.nav .side{transform:none}
+  .mtop{display:flex}
+  .wrap{padding:22px 16px 80px}
+  h1{font-size:23px}
+  .body{padding:14px 15px 17px}
+  .pill{display:none}
+  .lk{opacity:1}
+  .part p{margin-left:0}
+  table{font-size:13px}
+  th,td{padding:8px 10px}
+  #totop{right:14px;bottom:14px}
+}
+
+/* ═══════════════ 打印 / 导出 PDF ═══════════════ */
+@media print{
+  :root,:root[data-theme=dark],:root[data-theme=light]{
+    --ink:#111; --ink2:#444; --ink3:#777;
+    --line:#dcdcdc; --line2:#c4c4c4; --bg:#fff; --soft:#fafafa; --soft2:#f2f2f2;
+    --acc:#0b5aa8; --accSoft:#eef4fb;
+    --ok:#0f5c31; --okSoft:#eef8f2;
+    --wa:#7a4f00; --waSoft:#fdf6e3;
+    --da:#a01f18; --daSoft:#fdf0ef;
+    --hl:#fff2b8; color-scheme:light;
+  }
+  .side,.mtop,.scrim,#totop,.lk,.chev,.ck,.empty,.skip{display:none!important}
+  .app{display:block}
+  .main{display:block}
+  .wrap{max-width:none;margin:0;padding:0}
+  body{font-size:10.5pt;line-height:1.6}
+  /* 强制展开全部折叠块（summary 必须保持 flex，否则序号/标题会各占一行） */
+  details>*:not(summary){display:revert!important}
+  details>summary{display:flex!important}
+  #p1{break-before:auto!important}
+  details{background:#fff!important;border-bottom:1px solid var(--line);break-inside:auto}
+  details[open] summary,summary{border-bottom:1px solid var(--line);padding:9px 12px;break-after:avoid}
+  .list{border-radius:0}
+  .n{background:#fff!important;border:1px solid var(--line2)!important;color:#333!important}
+  .body{padding:12px 12px 14px}
+  .part{break-before:page;break-after:avoid;margin:0 0 14px}
+  .part:first-of-type{break-before:auto}
+  h1,h2,h3,h4,.q{break-after:avoid}
+  .qa,.note,.acc,.do,.card,table,tr{break-inside:avoid}
+  .cards{grid-template-columns:1fr 1fr}
+  a{color:var(--acc);text-decoration:none}
+  code{background:var(--soft2)}
+  .vban{break-inside:avoid}
+  footer{break-inside:avoid}
+  @page{size:A4;margin:15mm 13mm 16mm}
+}
+
+
+.langsw{flex:none;margin-left:auto;font-size:12px;font-weight:700;padding:3px 9px;border:1px solid var(--line2);border-radius:7px;color:var(--ink2);background:var(--bg);white-space:nowrap;align-self:center}
+.langsw:hover{text-decoration:none;border-color:var(--acc);color:var(--acc)}
+.mtop .langsw{margin-left:auto}
+@media print{.langsw{display:none!important}}
+</style>
+</head>
+<body>
+<a class="skip" href="#top">Skip to content</a>
+<div class="scrim" id="scrim"></div>
+<div class="app">
+
+<aside class="side" id="side">
+  <div class="sbrand">
+    <div class="logo">T</div>
+    <div>
+      <b>Tenjin Onboarding Guide</b>
+      <em>Tenjin China Support</em>
+    </div>
+    <a class="langsw" href="../" data-base="../">中文</a>
+  </div>
+  <div class="sctl">
+    <input id="q" type="search" placeholder="Search (press /)" autocomplete="off">
+  </div>
+  <div class="prog">
+    <div class="plab"><b>Setup progress</b><span id="pnum">0 / 0</span></div>
+    <div class="pbar"><i id="pfill"></i></div>
+    <div class="plab" style="margin:5px 0 0"><span>Tick the box by a step to mark it done</span><button id="preset" type="button">Reset</button></div>
+  </div>
+  <nav class="toc" id="toc" aria-label="Contents"></nav>
+  <div class="sfoot">
+    <button id="allopen" type="button">Expand all</button>
+    <button id="allclose" type="button">Collapse all</button>
+    <button id="theme" type="button">Theme: system</button>
+    <button id="print" type="button">Print / PDF</button>
+  </div>
+</aside>
+
+<div class="main">
+  <header class="mtop">
+    <button id="burger" type="button" aria-label="Contents">☰</button>
+    <b>Tenjin Onboarding Guide</b>
+    <a class="langsw" href="../" data-base="../">中文</a>
+  </header>
+  <div class="wrap" id="top">
+<h1>Tenjin Onboarding Guide</h1>
+<p class="lede">New to Tenjin? This page walks you through what to set up, how Tenjin's data rules work, and how to check things when numbers don't match after launch.</p>
+
+<div class="hub">
+  <div class="hubt">
+    <b>This page is a map. The detailed steps live in the official docs.</b>
+    <span>The <i class="dlab-mini">📖 Official docs</i> box at the top of each section links to the full instructions for that step. This page tells you what needs to be done, in what order, and where people most often go wrong.</span>
+  </div>
+  <a class="hubbtn" href="https://tenjin.com/docs/">Open Tenjin docs ↗</a>
+</div>
+
+<div class="note i">
+  <p><b>The core work is four steps:</b> add your app (1) → integrate the SDK (2) → connect channels (3) → set up callbacks (5). Everything else is as needed.</p>
+  <p><b>New to the dashboard?</b> Start with <a href="#map">Dashboard map: where things are</a>. The steps below will make a lot more sense.</p>
+  <p><b>Numbers don't match after launch?</b> Go straight to <a href="#checklist">Troubleshooting · Data discrepancy checklist</a>. The first four checks rule out most cases.</p>
+</div>
+
+<!-- ══════════ PART 1 ══════════ -->
+<div class="part" id="p1">
+  <h2><span class="pn">1</span>Setup steps</h2>
+  <p>Work through them in order. Each step covers what to do, the official docs, how to know it's done, and common questions.</p>
+</div>
+
+<div class="list">
+
+<details id="s0">
+  <summary><span class="n">0</span><span class="t">Before you start: confirm these details</span><span class="chev">▶</span></summary>
+  <div class="body">
+    <div class="do"><b>What to do</b>Run through the list below so you know which setup steps you need</div>
+    <ul>
+      <li>App name, package name (bundle ID), platform (iOS / Android)</li>
+      <li>Which stores it's published on (Google Play / App Store / Chinese Android stores, and which ones)</li>
+      <li>App type and how it makes money (ads, in-app purchases, subscriptions, etc.)</li>
+      <li>Your main ad channels</li>
+      <li>Whether you monetize with ads, and which mediation platform you use</li>
+      <li>Whether you need data sent back to your own server</li>
+    </ul>
+  </div>
+</details>
+
+<details id="s1">
+  <summary><span class="n">1</span><span class="t">Account and app setup</span><span class="chev">▶</span></summary>
+  <div class="body">
+    <div class="do"><b>What to do</b>Create your organization → invite teammates and assign roles → add your app → hand the SDK Key to your developers</div>
+    <div class="docs">
+      <a href="https://tenjin.com/docs/account-creation/">Create an account</a>
+      <a href="https://tenjin.com/docs/add-apps/">Add apps</a>
+      <a href="https://tenjin.com/docs/manage-organization/">Manage organization</a>
+      <a href="https://tenjin.com/docs/manage-user/">Manage user</a>
+      <a href="https://tenjin.com/docs/third-party-android-store/">Third-party Android stores</a>
+    </div>
+    <div class="acc">Done when: the app is created and the SDK Key has been handed to your developers</div>
+    <h4>Common Q&amp;A</h4>
+    <div class="qa key">
+      <div class="q">Third-party Android stores need their own app</div>
+      <p>Google Play and other Android stores (Xiaomi / OPPO / vivo / Transsion) are separate apps in Tenjin. Builds for Chinese stores are added as <b>Android Other</b> apps in the dashboard; in the SDK, use <code>TenjinSDK.AppStoreType.other</code> together with that app's SDK Key.</p>
+      <p>Which one to use depends on <b>which build is installed on the user's phone</b>, not on which channel you advertise on. For example, if you advertise on OPPO but users download from Google Play after clicking, use the Google Play app.</p>
+      <p><b>Key rule: the store type declared in the SDK must exactly match the type selected in the dashboard.</b> A mismatch returns <code>{"code":404,"message":"no such app"}</code>.</p>
+    </div>
+    <div class="qa">
+      <div class="q">You can add an app before it's published</div>
+      <p>Go to <b>CONFIGURE → Apps → + Add New App</b>, click <b>Add Manually</b>, pick the platform (Apple / Google Play / Amazon / Android Other), and enter the app name and bundle ID. Once the app is live, Tenjin fills in the store details automatically (up to about 24 hours), or you can click <b>Update App Store Info</b> on the app page.</p>
+    </div>
+    <div class="qa">
+      <div class="q">Add the app and the channel before creating a campaign</div>
+      <p>Otherwise the app dropdown is empty when you create a campaign (it shows No options).</p>
+    </div>
+    <div class="qa">
+      <div class="q">Which role should I give a teammate?</div>
+      <table>
+        <tr><th>Teammate</th><th>Suggested role</th><th>What they can do</th></tr>
+        <tr><td>Owner / admin</td><td>Account Administration</td><td>Full access, including managing other users' access</td></tr>
+        <tr><td>UA team</td><td>UA Manager or UA Configurator</td><td>Manage campaigns and apps; UA Configurator can also manage channels</td></tr>
+        <tr><td>Developers</td><td>Developer</td><td>App settings and event health; no access to callbacks or attribution windows</td></tr>
+        <tr><td>View-only colleagues</td><td>Analyst</td><td>View reports for selected apps only; can't change settings</td></tr>
+        <tr><td>Agencies</td><td>Agency</td><td>Campaigns, reports etc., limited to specific channels and apps</td></tr>
+      </table>
+      <p>In short: Account Administration has the most access; pick another role only if you want to limit access. One person can hold several non-conflicting roles. See the Manage Organization doc for details.</p>
+    </div>
+    <div class="qa">
+      <div class="q">Where are the app's settings after it's created?</div>
+      <p>The app page is split into <b>Settings / SDK / Attribution / Callbacks</b> tabs, which the later steps all use. See <a href="#map">Dashboard map</a> for what's in each.</p>
+    </div>
+  </div>
+</details>
+
+<details id="s2">
+  <summary><span class="n">2</span><span class="t">SDK integration</span><span class="chev">▶</span></summary>
+  <div class="body">
+    <div class="do"><b>What to do</b>Integrate the SDK for your platform → initialize and call connect on launch → verify with a test device</div>
+    <div class="docs">
+      <a href="https://tenjin.com/docs/add-the-tenjin-sdk/">Add the Tenjin SDK</a>
+      <a href="https://tenjin.com/docs/mmp-sdk-ios/">iOS SDK</a>
+      <a href="https://tenjin.com/docs/mmp-sdk-android/">Android SDK</a>
+      <a href="https://tenjin.com/docs/mmp-unity-sdk/">Unity SDK</a>
+      <a href="https://tenjin.com/docs/sdk-faq/">SDK FAQ</a>
+      <a href="https://tenjin.com/docs/check-sdk-status/">Check SDK status</a>
+    </div>
+    <div class="acc">Done when: on the app's <b>SDK</b> tab, the SDK Key's "Last used" shows a timestamp and App Open shows as received (green) in the integration status table</div>
+    <h4>Common Q&amp;A</h4>
+    <div class="qa hot">
+      <div class="q">A log line doesn't mean the SDK is actually connected</div>
+      <p>The most common false signal: the client log shows "connect", but the dashboard shows the SDK Key as <code>Last used: never</code> and App Open not received. That means no request ever reached Tenjin.</p>
+      <p>Also keep initialization and connect apart: initialization (<code>initialize</code> on iOS, <code>getInstance(key)</code> on Unity / Android) only creates the instance and sends nothing. The request to Tenjin is sent by <code>connect()</code>. On iOS the order is: initialize → ATT prompt → <code>connect()</code>.</p>
+    </div>
+    <div class="qa key">
+      <div class="q">Why does getAttributionInfo return empty or missing fields?</div>
+      <p>Attribution isn't instant. After <code>connect()</code>, the server has to receive the request, match it to a click and produce a result. A few seconds is the industry-standard delay, so if you query too early the result may still be processing. <b>Add retry logic on the client:</b></p>
+      <ul>
+        <li>Don't delay <code>connect()</code>. Call it right after privacy consent (Android) or the ATT choice (iOS)</li>
+        <li>Make the first <code>getAttributionInfo</code> call 2–3 seconds after <code>connect()</code></li>
+        <li>If the response is empty or missing key fields, wait 1–2 seconds and retry</li>
+        <li>Cap retries at 3–5 attempts</li>
+      </ul>
+    </div>
+    <div class="qa key">
+      <div class="q">iOS: show the ATT prompt before starting the SDK</div>
+      <p>The SDK records the ATT status on first launch. If the user hasn't answered the prompt yet, it records "not authorized", which badly understates your ATT opt-in rate. <b>Start the Tenjin SDK after the user has responded to the ATT prompt.</b></p>
+    </div>
+    <div class="qa">
+      <div class="q">Using Cocos or another engine / framework?</div>
+      <p>Besides iOS, Android and Unity, Tenjin officially supports Flutter, React Native and more. Cocos and some other engines have unofficial community plugins, listed in the Other Plugins doc.</p>
+      <div class="docs"><a href="https://tenjin.com/docs/other-plugins/">Other plugins</a></div>
+    </div>
+    <div class="qa">
+      <div class="q">Don't integrate the Tenjin SDK and the Meta SDK together</div>
+      <p>Both SDKs would report the same events and Meta's numbers get messy. If Tenjin is your MMP, don't add the Meta SDK; at a minimum, turn off <code>autoLogAppEventsEnabled</code> in Meta's settings so it stops sending revenue / purchase events by default.</p>
+    </div>
+  </div>
+</details>
+
+<details id="s3">
+  <summary><span class="n">3</span><span class="t">Connecting channels</span><span class="chev">▶</span></summary>
+  <div class="body">
+    <div class="do"><b>What to do</b>Add and authorize channels in the dashboard → complete each channel's own setup → create campaigns and tracking links (for non-self-attributing channels)</div>
+       <div class="docs">
+      <a href="https://tenjin.com/docs/add-channels/">Add channels</a>
+      <a href="https://tenjin.com/docs/create-campaign-and-tracking-links/">Create campaigns and tracking links</a>
+    </div>
+    <div class="acc">Done when: spend data is pulled from the channel, and Tracked Installs appear once campaigns are live</div>
+    <div class="note i">
+      <p><b>What this step is really for:</b></p>
+      <ul>
+        <li>You add a channel and create a campaign in order to <b>generate a tracking link</b>, which you then paste into the channel's ad platform.</li>
+        <li><b>How many links you need depends on the channel.</b> For most channels, one tracking link per app is enough; later campaigns don't need to be added one by one in Tenjin because they're pulled from the channel. But <b>some channels (OPPO, for example) need a separate tracking link for each campaign</b>: every time you create a campaign on the channel, create a matching link in Tenjin, or that campaign's data won't be attributed correctly.</li>
+        <li><b>Some self-attributing networks (SANs) have no tracking link at all. That's expected.</b></li>
+      </ul>
+    </div>
+    <p>Every channel names its "campaign" levels differently; see the <a href="https://docs.google.com/spreadsheets/d/1sBJiQOpQOHyGT7eaAme2LXyqmBVtExyqDhZNjD4fhzs/edit?usp=sharing">channel hierarchy mapping</a>.</p>
+    <p>The four sections below cover <a href="#meta">Meta</a>, <a href="#google">Google Ads</a>, <a href="#tiktok">TikTok</a> and <a href="#other">other channels</a>.</p>
+    <h4>Common Q&amp;A</h4>
+    <div class="qa">
+      <div class="q">A channel Campaign ID showing "unknown" is normal</div>
+      <p>This field is only resolved once the campaign actually produces attributed data, so it shows unknown when first created. But if it <b>still shows unknown after launch and clicks are also 0</b>, check the macro mapping in the tracking link.</p>
+    </div>
+  </div>
+</details>
+
+<details id="meta">
+  <summary><span class="n">3.1</span><span class="t">Channel: Meta</span><span class="pill hot">Frequent</span><span class="chev">▶</span></summary>
+  <div class="body">
+    <div class="docs">
+      <a href="https://tenjin.com/docs/meta-setup/">Meta setup</a>
+      <a href="https://tenjin.com/docs/meta-amm-tenjin/">Meta AMM and Tenjin</a>
+    </div>
+    <div class="qa hot">
+      <div class="q">⚠️ Most common issue: accept the AMM terms before you launch</div>
+      <p>Under Meta's privacy rules, Tenjin can show full Meta data only if <b>either</b> condition is met:</p>
+      <p><b>①</b> the campaign meets the minimum volume threshold (&gt;100 unique users or &gt;100 tracked installs), <b>or ②</b> you have accepted Meta's <b>AMM (Advanced Mobile Measurement)</b> terms.</p>
+      <div class="docs go">
+        <a href="https://developers.facebook.com/advanced_mobile_measurement/terms">Open Meta's AMM terms to accept</a>
+        <a href="https://tenjin.com/docs/meta-setup/#meta-privacy-threshold">Docs: Meta privacy threshold</a>
+      </div>
+
+      <p>If neither is met, Meta only allows part of the data to be shown: Meta's dashboard shows dozens or hundreds of installs, while Tenjin's campaign / creative / daily breakdowns only show some of them. App-level and channel-level totals are not affected. <b>Accept the AMM terms before you start spending</b>, rather than waiting for volume.</p>
+      <p><b>Accepting is not retroactive:</b> the day you accept has partial data, and data is complete <b>from the next day</b>. For dates before acceptance, you can only see App / channel level totals. Those totals are complete and nothing is lost; Meta just doesn't allow more detailed breakdowns. So a total that's larger than the sum of its breakdown is expected, not a data error. To get more detail for a past period, widen the date range or use fewer breakdown levels.</p>
+      <div class="docs"><a href="https://tenjin.com/docs/meta-setup/#why-do-my-meta-numbers-look-incomplete-for-dates-before-amm-was-enabled">Why Meta data looks incomplete before AMM was accepted</a></div>
+    </div>
+    <div class="qa">
+      <div class="q">Android: we recommend adding the Install Referrer decryption key</div>
+      <p>Meta passes ad information to the app's first open through the Android Install Referrer. With the decryption key added, Tenjin gets an additional, more accurate way to attribute Android installs.</p>
+      <ul>
+        <li><b>Where to get it:</b> <a href="https://developers.facebook.com/apps/">Meta for Developers</a> → your app → App Settings → Basic → Android section; copy the <b>Install Referrer Decryption Key</b>.</li>
+        <li><b>Where to enter it:</b> Tenjin app page → Settings tab → Advanced → <b>Meta Referrer Decryption Key</b>.</li>
+        <li>The SDK needs Install Referrer integrated (see the Android SDK doc).</li>
+      </ul>
+      <div class="docs"><a href="https://tenjin.com/docs/meta-setup/#measuring-android-meta-campaigns-using-android-referrer-method">Android Meta Install Referrer setup</a></div>
+    </div>
+    <div class="qa">
+      <div class="q">What do I set up in Tenjin to run AEO / VO campaigns?</div>
+      <ul>
+        <li><b>AEO (app event optimization)</b>: on the app page, go to Callbacks → Meta → ADD EVENTS, choose <b>Meta standard custom event</b>, and map your event to a Meta standard event. To optimize on your own event names, choose <b>Meta manual custom event</b>, but you need at least one non-install standard event first.</li>
+        <li><b>VO (value optimization)</b>: run AEO first. To optimize on purchase value, turn on the <b>Meta IAP</b> callback; for ad revenue value, turn on the <b>Meta Ad Revenue</b> callback. Meta's eligibility bar: at least 15 attributed purchases with value in the last 7 days, or at least 15 attributed ad impressions with at least 2 distinct values in the last 28 days.</li>
+      </ul>
+      <p>Once set up, you can see the events Tenjin sends in <a href="https://business.facebook.com/events_manager2/overview">Meta Events Manager</a>.</p>
+    </div>
+    <div class="qa">
+      <div class="q">The level mapping isn't what you'd expect</div>
+      <table>
+        <tr><th>In Tenjin</th><th>Is actually Meta's</th></tr>
+        <tr><td>campaign</td><td>ad set</td></tr>
+        <tr><td>creative</td><td>ad</td></tr>
+        <tr><td>site</td><td>placement</td></tr>
+      </table>
+      <p>Meta campaigns appear in Tenjin as "ad set name (campaign name)"; the name in brackets is the Meta campaign the ad set belongs to. In exports and callbacks, <code>remote_campaign_id</code> is the <b>ad set ID</b>.</p>
+    </div>
+    <div class="qa">
+      <div class="q">Meta has two ad revenue callbacks; by default, turn on the one without "Purchase"</div>
+      <table>
+        <tr><th>Callback</th><th>Sent to</th><th>When to use</th></tr>
+        <tr><td><b>Ad Revenue</b></td><td>Meta's AdImpression endpoint</td><td><b>The default, for all campaign types.</b> Usually this is all you need</td></tr>
+        <tr><td><b>Ad Revenue (as Purchase)</b></td><td>Meta's Purchase endpoint</td><td><b>Only for blended VO campaigns</b>, i.e. when you want ad revenue and IAP revenue sent to the same purchase endpoint</td></tr>
+      </table>
+    </div>
+    <div class="qa">
+      <div class="q">A 30–40% gap between Meta's installs and Tenjin's is normal</div>
+      <p>Meta uses its own attribution method and windows, and may include modeled data. The official docs put the typical gap at <b>30–40%</b>.</p>
+    </div>
+  </div>
+</details>
+
+<details id="google">
+  <summary><span class="n">3.2</span><span class="t">Channel: Google Ads</span><span class="pill hot">Frequent</span><span class="chev">▶</span></summary>
+  <div class="body">
+    <div class="docs"><a href="https://tenjin.com/docs/google-ads-setup/">Google Ads setup</a></div>
+    <div class="qa hot">
+      <div class="q">⚠️ iOS requires ICM</div>
+      <p>For iOS users who haven't opted in to ATT, Google attributes probabilistically through <b>ICM (Integrated Conversion Measurement)</b>. It's currently Google's only probabilistic attribution method on iOS. Without ICM, these users basically can't be attributed to Google, and Tracked Installs will be noticeably low.</p>
+      <p>Once ICM is integrated in the SDK per the docs, Tenjin claims these installs automatically. Also set the Google Ads <b>probabilistic attribution window to 24 hours</b> (app page → Attribution tab → choose Google Ads and set it separately).</p>
+      <div class="docs"><a href="https://tenjin.com/docs/google-ads-setup/#1-google-ads-icm-measurement-for-ios-apps-recommended-for-ios">Google Ads ICM (step 1)</a></div>
+    </div>
+    <div class="qa key">
+      <div class="q">Primary or Secondary conversion action? It depends on which source you bid on</div>
+      <p>Google Ads only bids on "Primary" conversions. Tenjin's conversion event is Secondary by default after import. Whether to change it depends on which source you want Google to optimize toward:</p>
+      <table>
+        <tr><th>Your situation</th><th>How to set it</th></tr>
+        <tr><td>Bidding on Tenjin's conversions</td><td>Set the Tenjin conversion to <b>Primary</b> and Firebase to Secondary</td></tr>
+        <tr><td>Bidding on Firebase, e.g. running tROAS on ad revenue (Google only accepts ad revenue sent from Firebase)</td><td>Set Firebase to <b>Primary</b> and keep Tenjin as Secondary</td></tr>
+      </table>
+      <p>From the docs: <b>setting Firebase as the primary conversion can increase the gap between Tracked Installs and Reported Installs.</b> This comes from the two sides attributing differently. It's expected and doesn't mean anything is wrong on Tenjin's side.</p>
+      <p>How to change it: Google Ads → open the conversion (named like <code>your.package first_open</code>) → Edit Settings → change Action optimization. After a change, Smart Bidding needs 1–2 conversion cycles to relearn, so the effect shows up gradually.</p>
+      <div class="docs"><a href="https://tenjin.com/docs/google-ads-setup/#4-import-conversion-events-from-tenjin-mandatory-for-android-and-ios">Import conversion events from Tenjin (step 4)</a></div>
+    </div>
+    <div class="qa">
+      <div class="q">Multiple Google Ads accounts: add one callback per Link ID</div>
+      <p>From the docs: "If you have multiple Link IDs, click <b>+ ADD EVENTS → Advanced</b> and add a callback for each Link ID respectively."</p>
+      <div class="docs"><a href="https://tenjin.com/docs/google-ads-setup/#3-add-your-link-id-on-tenjins-dashboard-mandatory-for-android-and-ios">Add your Link ID in Tenjin (step 3)</a></div>
+    </div>
+    <div class="qa key">
+      <div class="q">Can't select Tenjin as a conversion source in Google Ads? It needs real installs first</div>
+      <p>Even with the link created and callbacks added, Google Ads only lists third-party app analytics as a source <b>after it has actually received install callbacks</b> under that Link ID. Right after linking, with zero installs, it won't appear.</p>
+      <p><b>This isn't a setup error. Release the production build, wait for real installs, then come back after a few hours to a day.</b></p>
+    </div>
+    <div class="qa">
+      <div class="q">Can't change the conversion action?</div>
+      <p>Check whether it's a Manager Account (MCC) permission restriction, and confirm the campaign goal is set to "Installs".</p>
+    </div>
+    <div class="qa">
+      <div class="q">Where do I create a Link ID in Google Ads?</div>
+      <p>In Google Ads, go to <b>Tools → Data Manager → Connected products → Third-party app analytics</b>, click <b>+ Link ID</b>, and choose Tenjin and your app. "Unverified" is normal at first; it changes once you've added it in Tenjin and conversion data starts flowing.</p>
+    </div>
+    <div class="qa">
+      <div class="q">Can ad revenue be sent to Google Ads for tROAS?</div>
+      <p>Not through Tenjin (or any MMP) for now. Ad revenue for Google Ads tROAS <b>must be sent directly from Firebase</b>. Tenjin still handles attribution and the ROAS in its own dashboard; the two run side by side.</p>
+    </div>
+  </div>
+</details>
+
+<details id="tiktok">
+  <summary><span class="n">3.3</span><span class="t">Channel: TikTok</span><span class="chev">▶</span></summary>
+  <div class="body">
+    <div class="docs">
+      <a href="https://tenjin.com/docs/tiktok-for-business-setup/">TikTok for Business setup</a>
+      <a href="https://docs.google.com/document/d/1TxVjevsmE4v60_gu4_RZO9iyBA4lyXlva_CoipaPqXU/edit">TikTok discrepancy troubleshooting guide</a>
+    </div>
+    <div class="qa key">
+      <div class="q">TikTok uses an App Integration Key, not a tracking link</div>
+      <ol>
+        <li>Add your TikTok account in Tenjin, then create a TikTok campaign and get the <b>App Integration Key</b> under Tracking.</li>
+        <li>In TikTok Events Manager, connect a data source, choose Tenjin as the MMP and paste the key. TikTok can take up to 24 hours to set up tracking.</li>
+        <li>Enter the <b>TikTok App ID</b> that TikTok gives you back in Tenjin: app page → Callbacks → choose TikTok, then turn on the Install callback.</li>
+      </ol>
+    </div>
+    <div class="qa">
+      <div class="q">Stuck on "Pending Verification" in TikTok?</div>
+      <p>First confirm all three steps above are done and the TikTok App ID is correct. If everything is right, TikTok's own verification can take a few days.</p>
+    </div>
+    <div class="qa">
+      <div class="q">Can't find a new ad account in Tenjin?</div>
+      <p>In TikTok Business Center, add <b>the TikTok account you originally authorized in Tenjin</b> as a member of the new ad account and grant it permission. Then click <b>Add Ad Account</b> in Tenjin and search; re-authorizing is usually not needed.</p>
+    </div>
+    <div class="qa">
+      <div class="q">TikTok campaigns appear in Tenjin as "ad group name (campaign name)"</div>
+      <p>The name in brackets is the TikTok campaign the ad group belongs to. Requests at campaign level to the TikTok API don't return platform and <code>bundle_id</code>, so Tenjin has to request at ad group level. This is a reporting architecture limit and can't be changed.</p>
+    </div>
+  </div>
+</details>
+
+<details id="other">
+  <summary><span class="n">3.4</span><span class="t">Channel: others</span><span class="chev">▶</span></summary>
+  <div class="body">
+    <div class="qa">
+      <div class="q">AppLovin: one link per app, pasted into every campaign</div>
+      <p>First enter AppLovin's SDK Key in Tenjin's Callbacks and turn on the Install callback; only then do the click and impression tracking links appear on the campaign page. The link is generated per app, but in AppLovin it has to be pasted into the Tracking settings of <b>every</b> campaign.</p>
+      <div class="docs"><a href="https://tenjin.com/docs/applovin-setup/">AppLovin setup</a></div>
+    </div>
+    <div class="qa">
+      <div class="q">OPPO / vivo have no store landing page URL. What do I enter?</div>
+      <p>These two stores handle the redirect themselves, so anything works for that URL when creating the app.</p>
+    </div>
+  </div>
+</details>
+
+<details id="s4">
+  <summary><span class="n">4</span><span class="t">Attribution settings</span><span class="pill opt">Usually no change needed</span><span class="chev">▶</span></summary>
+  <div class="body">
+    <div class="do"><b>What to do</b>By default nothing needs changing. To change attribution windows or turn on re-engagement, use the app page's <strong>Attribution</strong> tab; the cohort day definition is under My Account → Manage User</div>
+    <div class="docs">
+      <a href="https://tenjin.com/docs/attribution-window-setup/">Attribution window setup</a>
+      <a href="https://tenjin.com/docs/retention/">Retention and cohorts</a>
+      <a href="https://tenjin.com/docs/user-attribution-overview/">User attribution overview</a>
+    </div>
+    <p>Attribution windows can be set per app, and overridden per app × channel. For the concepts (last click, attribution windows, the two cohort methods, re-engagement), see <a href="#organic">Where organic installs come from</a>, <a href="#cohort">Cohort metrics</a> and <a href="#reinstall">Reinstalls and re-engagement</a>.</p>
+  </div>
+</details>
+
+<details id="s5">
+  <summary><span class="n">5</span><span class="t">Callbacks</span><span class="pill key">Important</span><span class="chev">▶</span></summary>
+  <div class="body">
+    <div class="do"><b>What to do</b>Set up callbacks to your channels → if needed, set up S2S callbacks to your own server</div>
+    <div class="docs">
+      <a href="https://tenjin.com/docs/callback-setup/">Callback setup</a>
+      <a href="https://tenjin.com/docs/callback-macros/">Callback macros</a>
+      <a href="https://tenjin.com/docs/server-to-server-s2s-callbacks/">S2S callbacks</a>
+      <a href="https://tenjin.com/docs/implementing-s2s-tracking-a-no-sdk-guide/">S2S tracking without the SDK</a>
+    </div>
+    <div class="note d"><p><b>If you skip this:</b> channels don't receive conversion data, attribution is incomplete, and campaigns can't optimize.</p></div>
+    <div class="acc">Done when: the relevant callbacks are switched on in the app's <b>Callbacks</b> tab, and Callback Health shows real records once campaigns are live</div>
+    <h4>How to read Callback Health</h4>
+    <p>Callback Health is the main way to tell <b>whether Tenjin recorded the attribution and sent it to the channel successfully</b>.</p>
+    <table>
+      <tr><th>What you see</th><th>Meaning</th></tr>
+      <tr><td><b>Green 100%</b></td><td>Every callback in the past day was sent and accepted by the channel</td></tr>
+      <tr><td><b>Yellow / red</b></td><td>Some callbacks were sent but rejected by the channel</td></tr>
+      <tr><td><b>No color or percentage</b></td><td>The event wasn't triggered in the past day. <b>This isn't necessarily a problem</b>: there may simply have been nothing to send</td></tr>
+    </table>
+    <p>Click into a callback to see past successful and failed deliveries, plus the number of attempts in the past hour and past day.</p>
+    <h4>Common Q&amp;A</h4>
+    <div class="qa">
+      <div class="q">To turn on a channel's callbacks, you must authorize at least one ad account for that channel first</div>
+      <p>But if you report events purely via S2S without the SDK, the event reporting itself doesn't need any channel authorization.</p>
+    </div>
+    <div class="qa">
+      <div class="q">Test devices don't produce callback records</div>
+      <p>Test devices only record test events coming into Tenjin. Callbacks to channels are only sent once real campaigns are running and there are real attributed installs.</p>
+    </div>
+    <div class="qa">
+      <div class="q">The channel's dashboard shows 0 installs?</div>
+      <p>First check that the callback is switched on in Tenjin.</p>
+    </div>
+  </div>
+</details>
+
+<details id="s6">
+  <summary><span class="n">6</span><span class="t">Ad monetization</span><span class="pill opt">Optional</span><span class="chev">▶</span></summary>
+  <div class="body">
+    <div class="do"><b>What to do</b>Integrate the Tenjin listener for your mediation platform → turn on the channels' Ad Revenue callbacks</div>
+    <div class="docs">
+      <a href="https://tenjin.com/docs/category/ad-revenue-ad-mediation-setup/">Supported mediation platforms and code</a>
+      <a href="https://tenjin.com/docs/ad-revenue-channel-api-setup/">Ad revenue channel API setup</a>
+      <a href="https://tenjin.com/docs/difference-between-ad-mediation-ltv-and-ad-revenue-ltv/">The two types of ad revenue</a>
+    </div>
+    <div class="acc">Done when: Ad Revenue (Ad Mediation) shows data</div>
+    <h4>Common Q&amp;A</h4>
+    <div class="qa key">
+      <div class="q">Mediation platforms are integrated in the SDK, not added as channels</div>
+      <p>Ad monetization is a separate SDK integration: the Tenjin SDK listens for the mediation platform's impression events. A mediation platform isn't an ad channel and doesn't need to be added as one. Supported platforms and their integration code are in the docs.</p>
+    </div>
+    <div class="qa">
+      <div class="q">Your mediation platform isn't on the supported list?</div>
+      <p>The SDK has a generic custom method (Android SDK 1.19.0+): pass each impression's revenue to Tenjin as JSON, with network name, currency and revenue required. See the Custom mediation section of each platform's SDK doc.</p>
+    </div>
+    <div class="qa">
+      <div class="q">How do I tell UA channels from monetization channels?</div>
+      <p>On the <b>Add a Channel</b> page, cards marked <b>revenue in the bottom-right corner are monetization channels</b>; cards marked <b>attribution and spend are UA channels</b>.</p>
+    </div>
+    <div class="qa">
+      <div class="q">Why does ad revenue show up in the UA report?</div>
+      <p>Because the UA report shows data <b>by acquisition channel</b>. The ad revenue from mediation platforms is <b>ILRD (Impression Level Revenue Data)</b>, which <b>can be tied to the channel the user came from</b>, so it's the right basis for ROAS.</p>
+    </div>
+    <div class="qa">
+      <div class="q">The dashboard has Ad Mediation and Ad Network revenue; use the former</div>
+      <p>Ad Network revenue is only complete if every monetization network is authorized via API one by one. For the full difference, normal gaps and how to troubleshoot, see <a href="#revenue">Revenue metrics on the dashboard</a>.</p>
+    </div>
+    <div class="qa">
+      <div class="q">Revenue in the mediation dashboard but nothing in Tenjin?</div>
+      <p>Check the SDK listener integration first. Also go to <b>DIAGNOSE → Health</b> and look for "Unlinked Ad Placements"; link them to the right app.</p>
+    </div>
+  </div>
+</details>
+
+<details id="s7">
+  <summary><span class="n">7</span><span class="t">In-app purchase and subscription revenue</span><span class="pill opt">Optional</span><span class="chev">▶</span></summary>
+  <div class="body">
+    <div class="do"><b>What to do</b>Decide between IAP reporting, subscription measurement, or both → IAP: choose SDK or S2S by payment method and add your receipt validation key → subscriptions: upload store credentials and add the SDK subscription method → confirm the store commission on the app's <strong>Settings</strong> tab</div>
+    <div class="docs">
+      <a href="https://tenjin.com/docs/in-app-purchase-iap-revenue/">IAP revenue</a>
+      <a href="https://tenjin.com/docs/server-to-server-s2s-purchases/">S2S purchases</a>
+      <a href="https://tenjin.com/docs/subscription-revenue-tracking-open-beta/">Subscription revenue measurement</a>
+      <a href="https://tenjin.com/docs/subscription-revenue/">Set up subscription revenue</a>
+    </div>
+    <h4>IAP or subscriptions: which one?</h4>
+    <table>
+      <tr><th></th><th>IAP reporting</th><th>Subscription revenue measurement</th></tr>
+      <tr><td><b>Best for</b></td><td>One-time purchases: coins, items, bundles, remove-ads, etc.</td><td>Auto-renewing subscriptions, especially with free trials</td></tr>
+      <tr><td><b>Where the data comes from</b></td><td>You report every purchase: the SDK in your app when the purchase happens, or your server via S2S</td><td>Tenjin uses your store credentials to <b>read trials, payments, renewals and cancellations directly from the App Store / Google Play</b>. The SDK only links each subscription to the user and the channel</td></tr>
+      <tr><td><b>Are renewals captured?</b></td><td>Renewals happen on the store side, so the SDK can't see them unless the user opens the app; to capture them, your server has to report them</td><td>Yes. Tenjin keeps checking with the store until the subscription ends, without the user opening the app</td></tr>
+      <tr><td><b>What you need</b></td><td>The SDK purchase method (or the S2S Purchase API); a receipt validation key: App-Specific Shared Secret on iOS, Google Play public key on Android</td><td>Store credentials: Key ID, Issuer ID and In-App Purchase key (.p8) on iOS; Google Play service account key (.json) on Android. Plus the SDK subscription method; RevenueCat users don't need SDK changes</td></tr>
+      <tr><td><b>Who does it</b></td><td>Developers</td><td>Credentials and callback switches can be set up by the marketing team; only the SDK subscription method needs a developer</td></tr>
+      <tr><td><b>Where to see the data</b></td><td>IAP Revenue, purchase counts, etc., included in LTV / ROAS</td><td>A separate Subscriptions report: New Trials, New Subscriptions, Renewals, Cancelled and revenue, splittable by product_id; also included in combined revenue, LTV and ROAS metrics with "+ Subscriptions" in the name</td></tr>
+      <tr><td><b>Callbacks to channels</b></td><td>Purchase callback</td><td>Built-in <b>Trial Start</b> and <b>Subscription Revenue</b> callbacks, no custom events needed. Support varies by channel; contact us if you can't find one</td></tr>
+      <tr><td><b>Status</b></td><td>Generally available</td><td>iOS in open beta; Android in beta, ask your account manager to enable it</td></tr>
+    </table>
+    <div class="note g">
+      <p><b>How to choose:</b> if you have subscriptions, use subscription measurement; keep using IAP reporting for one-time purchases. You can use both: <b>each transaction is counted only once</b> (as either a subscription or an IAP), so combined revenue isn't double counted.</p>
+    </div>
+    <div class="acc">Done when: events appear in the Live Event Tool during testing, and "Valid Purchase Event" lights up in the SDK integration status table with real purchases</div>
+    <h4>Common Q&amp;A</h4>
+    <div class="qa key">
+      <div class="q">There are two ways to report purchases, depending on who collects the payment</div>
+      <table>
+        <tr><th>Payment</th><th>Route</th><th>What's needed</th></tr>
+        <tr><td><b>Official store billing</b></td><td>The SDK's transaction API</td><td><b>Must include the receipt / signature.</b> Without a receipt Tenjin can't validate with the store and the purchase is marked UNKNOWABLE. If you don't want receipt validation, turn on <b>"Accept unvalidated purchases?"</b> under the app's <b>Settings → IAP Validation</b>; purchases without a receipt then count as revenue and trigger purchase callbacks</td></tr>
+        <tr><td><b>Third-party payments</b></td><td>S2S Purchase API</td><td>No client receipt or signature needed</td></tr>
+      </table>
+    </div>
+    <div class="qa hot">
+      <div class="q">Don't report the same purchase from both the SDK and your server</div>
+      <p>Otherwise revenue doubles. If you use S2S, remove the SDK-side reporting.</p>
+    </div>
+    <div class="qa">
+      <div class="q">How do I check purchase events recorded by the SDK?</div>
+      <p>In the Raw Data Exporter, select purchase events to export recent purchases. The <code>purchase_state</code> field tells you whether each one passed validation.</p>
+    </div>
+    <div class="qa key">
+      <div class="q">IAP revenue on the dashboard is net of the store commission</div>
+      <p>The app's <b>Settings → App Store Commission</b> sets how much is deducted: 30% by default, settable by date range. iOS apps can also choose <b>Dynamic</b> to apply Apple's country / region rates automatically. When reconciling with your own revenue data, first make sure both sides use the same basis (before or after commission).</p>
+      <p>With S2S: if the price you send is already after the store's cut, add <code>postcut=1</code> and Tenjin won't deduct it again.</p>
+    </div>
+
+    <div class="qa">
+      <div class="q">Using RevenueCat or another third-party subscription platform?</div>
+      <p>RevenueCat: add your store credentials in Tenjin, then add Tenjin's SDK Key under Integrations in RevenueCat; no SDK changes needed. On iOS Tenjin deduplicates automatically, so you can turn on both the subscription and IAP callbacks. <b>Android and other third-party platforms are not deduplicated yet</b>: for each channel, turn on either the Subscription Revenue callback or the IAP callback, not both, or the channel will receive duplicate events.</p>
+    </div>
+    <div class="qa">
+      <div class="q">Subscription-heavy Android app? Adjust the commission rate</div>
+      <p>Google Play takes 15% on subscriptions, while Tenjin's default Manual commission is 30%. If your Android app earns mostly from subscriptions, set App Store Commission to 15% (this rate also applies to one-time purchases). Also note that Tenjin doesn't deduct taxes and doesn't subtract refunds automatically yet, so numbers will differ from platforms like RevenueCat.</p>
+    </div>
+  </div>
+</details>
+
+<details id="s8">
+  <summary><span class="n">8</span><span class="t">Custom events</span><span class="pill opt">Optional</span><span class="chev">▶</span></summary>
+  <div class="body">
+    <div class="do"><b>What to do</b>Plan the key events to report → instrument them in the SDK → for events that should go to channels, configure them by event name in callbacks</div>
+    <div class="docs"><a href="https://tenjin.com/docs/custom-in-app-events/">Custom in-app events</a></div>
+    <h4>Common Q&amp;A</h4>
+    <div class="qa key">
+      <div class="q">Custom events only take integer values: no amounts, currencies or nested parameters</div>
+      <p>Tenjin is a marketing attribution tool, not a product analytics tool. Report revenue through <a href="#s7">the Purchase API in step 7</a>. For complex, multi-dimensional event parameters, run Firebase / GameAnalytics alongside and join on Tenjin's Customer User ID.</p>
+    </div>
+    <div class="qa">
+      <div class="q">Each app can have up to 500 custom events</div>
+      <p>Only send Tenjin the events that matter for campaign optimization (registration, tutorial complete, key levels, first purchase, etc.). Use a dedicated product analytics tool for large volumes of in-game tracking (such as hundreds of levels reported one by one), or you'll hit the limit quickly.</p>
+      <p>Also, the dashboard reports show roughly 30 custom events (prioritizing metrics you've saved and the most common events). With many events, some won't be findable in the dashboard and can only be seen in raw data. Contact us if you need specific events always shown.</p>
+    </div>
+    <div class="qa">
+      <div class="q">Want to send an event to a channel?</div>
+      <p>Send the event from the SDK first; only then does it appear in the list of selectable events in callbacks.</p>
+    </div>
+  </div>
+</details>
+
+<details id="s9">
+  <summary><span class="n">9</span><span class="t">Viewing and exporting data</span><span class="chev">▶</span></summary>
+  <div class="body">
+    <div class="do"><b>What to do</b>Get familiar with the dashboard → agree on how you'll reconcile numbers → connect the APIs if needed</div>
+    <div class="docs">
+      <a href="https://tenjin.com/docs/dashboard-metrics-list/">Dashboard metrics list</a>
+      <a href="https://tenjin.com/docs/filters-and-grouping/">Filters and grouping</a>
+      <a href="https://tenjin.com/docs/tenjin-analysis/">Tenjin analysis types</a>
+      <a href="https://tenjin.com/docs/raw-data-exporter/">Raw Data Export</a>
+      <a href="https://tenjin.com/docs/column-definitions-for-raw-data/">Raw data column definitions</a>
+      <a href="https://tenjin.com/docs/aggregated-data-exporter/">Data Explorer</a>
+      <a href="https://tenjin.com/docs/api-access-tokens/">API access tokens</a>
+      <a href="https://tenjin.com/docs/automation-apis/">Automation APIs</a>
+    </div>
+    <div class="note i"><p><b>How to use the dashboard, which reports exist, and which export tool to pick</b>: see <a href="#dashboard">Reading the dashboard and exporting data</a>.</p></div>
+    <h4>Common Q&amp;A</h4>
+    <div class="qa">
+      <div class="q">Not in the Live Event Tool ≠ data didn't come in</div>
+      <p>It only shows events from registered test devices.</p>
+    </div>
+    <h4>The three APIs and what each is for</h4>
+    <table>
+      <tr><th>API</th><th>What you get / do</th><th>Typical use</th><th>Docs</th></tr>
+      <tr><td><b>Reporting Metrics API</b></td><td>Aggregated report data: spend, installs, retention, LTV, ROAS, etc. Same metrics as the dashboard and Data Explorer, split by app / channel / campaign / country / date</td><td>Internal dashboards, daily sync of spend and ROAS</td><td><a href="https://tenjin.com/docs/automation-apis/#reporting-metrics-api">Overview</a><br><a href="https://api-docs.tenjin.com/reporting-metrics-api">API reference</a><br><a href="https://tenjin.com/docs/dashboard-metrics-list/">Metrics list</a></td></tr>
+      <tr><td><b>Data Exports API</b> (raw data)</td><td>Automates Raw Data Export: user-level event data (installs, custom events, purchases, ad revenue, etc.) with the same columns as the dashboard export</td><td>Loading event data into your own warehouse / BI for user-level analysis</td><td><a href="https://tenjin.com/docs/raw-data-exporter/">Overview</a><br><a href="https://api-docs.tenjin.com/data-exports-api">API reference</a><br><a href="https://tenjin.com/docs/column-definitions-for-raw-data/">Column definitions</a></td></tr>
+      <tr><td><b>Campaign Management API</b></td><td>Create, read, update and delete apps, channels, campaigns and callbacks without the dashboard</td><td>Bulk campaign creation, automated campaign setup</td><td><a href="https://tenjin.com/docs/automation-apis/#campaign-management-api">Overview</a><br><a href="https://api-docs.tenjin.com/campaign-management-api">API reference</a></td></tr>
+    </table>
+    <p><b>All three need an access token first:</b> create one under AUTOMATE → Access Tokens (see <a href="https://tenjin.com/docs/api-access-tokens/">API access tokens</a>). Data freshness: installs and events are near real-time; spend and ad revenue are pulled from channels every 2–3 hours, so pulling the API every 2–3 hours is enough.</p>
+    <div class="qa">
+      <div class="q">Pulling large volumes via API? We recommend:</div>
+      <p>Set <code>read_timeout</code> to 180–300 seconds (the default is too short and times out intermittently); set <code>per_page=1000</code> (leaving it out triggers a parameter validation error); and add a 3-day lookback to scheduled jobs (pulling T-1 too early, before ETL finishes, makes D0 revenue look low).</p>
+    </div>
+  </div>
+</details>
+
+</div>
+
+<!-- ══════════ PART 2 ══════════ -->
+<div class="part" id="p2">
+  <h2><span class="pn">2</span>Rules and definitions</h2>
+  <p>Get to know the dashboard first, then how Tenjin records installs, attributes them and calculates revenue.</p>
+</div>
+
+<div class="list">
+
+<details id="map">
+  <summary><span class="n">0</span><span class="t">Dashboard map: where things are</span><span class="pill key">Start here</span><span class="chev">▶</span></summary>
+  <div class="body">
+    <p>The Tenjin dashboard's main menu is grouped by purpose. These are the entries new users need most:</p>
+    <table>
+      <tr><th>Menu group</th><th>Entries</th><th>What it's for</th></tr>
+      <tr><td><b>ANALYZE</b></td><td>User Acquisition · Ad Monetization · SKAdNetwork</td><td>UA and ad monetization reports. See <a href="#dashboard">Reading the dashboard</a></td></tr>
+      <tr><td><b>EXPORT TOOLS</b></td><td>Data Explorer · Raw Data Exporter</td><td>Export aggregated reports / user-level data. See <a href="#dashboard">Choosing an export tool</a></td></tr>
+      <tr><td><b>CONFIGURE</b></td><td>Apps · Channels · Campaigns</td><td>Add apps, add channel accounts, create campaigns and tracking links. Most of setup steps 1–5 happen here</td></tr>
+      <tr><td><b>DIAGNOSE</b></td><td>Health · Test Devices · Live Event Tool</td><td>Find unlinked campaigns / ad placements, register test devices, watch test events live. See <a href="#testing">Testing</a></td></tr>
+      <tr><td><b>AUTOMATE</b></td><td>DataVault Credentials · Access Tokens</td><td>API tokens and data warehouse access</td></tr>
+      <tr><td><b>MY ACCOUNT</b></td><td>Manage User · Manage Organization · Usage &amp; Billing</td><td>Personal settings (including the cohort method), members and roles, usage</td></tr>
+    </table>
+    <p><b>Inside an app</b>, settings are split across tabs:</p>
+    <table>
+      <tr><th>Tab</th><th>What's in it</th><th>Related steps</th></tr>
+      <tr><td><b>Settings</b></td><td>App details; IAP validation key and whether to accept unvalidated purchases; store commission; subscription credentials</td><td><a href="#s1">1</a> · <a href="#s7">7</a></td></tr>
+      <tr><td><b>SDK</b></td><td>SDK Keys (up to 3 per app); SDK integration status table</td><td><a href="#s2">2</a> · <a href="#testing">Testing</a></td></tr>
+      <tr><td><b>Attribution</b></td><td>Attribution windows; re-engagement switch and inactivity threshold</td><td><a href="#s4">4</a> · <a href="#reinstall">Reinstalls and re-engagement</a></td></tr>
+      <tr><td><b>Callbacks</b></td><td>Channel callbacks (Integrations), callbacks to your own server (S2S Callbacks), Callback Health</td><td><a href="#s3">3</a> · <a href="#s5">5</a></td></tr>
+    </table>
+    <p>There's also a chat button in the bottom-right corner of the dashboard where you can ask the AI assistant or reach our team.</p>
+  </div>
+</details>
+
+<details id="metrics">
+  <summary><span class="n">0.1</span><span class="t">Common metrics: what to search for</span><span class="pill key">Start here</span><span class="chev">▶</span></summary>
+  <div class="body">
+    <div class="docs"><a href="https://tenjin.com/docs/dashboard-metrics-list/">Dashboard metrics list (all)</a></div>
+    <p>The dashboard has well over a thousand metrics and shows only a few by default. Below are the most commonly used ones, grouped by what you want to see. Search for the name in a report's <b>Edit Metrics</b> panel to add it; hover over a column header to see its definition.</p>
+    <div class="note i">
+      <p><b>Three naming rules to know first:</b></p>
+      <ul>
+        <li>Names with <b>N-Day</b> (e.g. 7-Day, 30-Day) are <b>cohort metrics</b>: how users performed in their first N days after install, grouped by install date. Others are counted on the day the event happened. (<a href="#cohort">See section 6</a>)</li>
+        <li>Ad revenue marked <b>(Ad Mediation)</b> comes from the mediation platform and is accurate per user and channel; <b>(Ad Network)</b> comes from monetization networks' settled revenue, allocated by sessions. Use Ad Mediation for ROAS. (<a href="#revenue">See section 7</a>)</li>
+        <li>Names with <b>All</b> and brackets are totals; the brackets list which revenue types are included.</li>
+      </ul>
+    </div>
+    <h4>Spend and cost</h4>
+    <table>
+      <tr><th>To see</th><th>Search for</th><th>Notes</th></tr>
+      <tr><td>How much you spent</td><td><b>Spend</b></td><td>Spend pulled from channel APIs (USD)</td></tr>
+      <tr><td>Cost per install</td><td><b>Cost-Per-Install (CPI)</b> / <b>Cost-Per-Tracked Install (tCPI)</b></td><td>CPI = spend ÷ installs reported by the channel (Reported); tCPI = spend ÷ installs attributed by Tenjin (Tracked)</td></tr>
+      <tr><td>CPM, click-through rate</td><td><b>Cost-Per-1000-Impressions (CPM)</b>, <b>Click-Through-Rate (CTR)</b></td><td>Based on impressions and clicks reported by the channel</td></tr>
+    </table>
+    <h4>Installs, users and retention</h4>
+    <table>
+      <tr><th>To see</th><th>Search for</th><th>Notes</th></tr>
+      <tr><td>Installs</td><td><b>Tracked Installs</b> / <b>Reported Installs</b></td><td>Tracked is Tenjin's attribution (use this one); Reported is what the channel reports (<a href="#tracked">see section 2</a>)</td></tr>
+      <tr><td>Daily active users</td><td><b>Average Daily Active Users</b></td><td>Average active users per day over the period</td></tr>
+      <tr><td>Retention</td><td><b>N-Day Retention Rate</b> (e.g. 1-Day, 7-Day)</td><td>Share of users who come back on day N after install</td></tr>
+    </table>
+    <h4>Ad monetization</h4>
+    <table>
+      <tr><th>To see</th><th>Search for</th><th>Notes</th></tr>
+      <tr><td>Total ad revenue for the day</td><td><b>Ad Revenue (Ad Mediation)</b></td><td>Counted by the day the revenue occurred</td></tr>
+      <tr><td>Ad revenue per user</td><td><b>Ad Revenue per Daily Active Users (Ad Mediation)</b></td><td>i.e. ad ARPDAU</td></tr>
+      <tr><td>Total ad impressions</td><td><b>Impressions (Ad Mediation)</b></td><td>Total impressions reported by the mediation platform</td></tr>
+      <tr><td>Ad impressions per user</td><td><b>IMPDAU (Ad Mediation)</b></td><td>Impressions ÷ daily active users</td></tr>
+      <tr><td>Ad revenue from these users in their first N days</td><td><b>N-Day Ad LTV (Ad Mediation)</b></td><td>Cumulative per cohort; the per-user version is N-Day Ad LTV / User</td></tr>
+      <tr><td>Ad ROAS</td><td><b>N-Day Ad ROAS (Ad Mediation)</b></td><td>N-day cumulative ad revenue ÷ spend</td></tr>
+    </table>
+    <h4>In-app purchases and subscriptions</h4>
+    <table>
+      <tr><th>To see</th><th>Search for</th><th>Notes</th></tr>
+      <tr><td>IAP revenue for the day / per user</td><td><b>IAP Revenue</b> / <b>IAP Revenue per Daily Active Users</b></td><td>Counted by purchase date, net of store commission (<a href="#s7">see step 7</a>)</td></tr>
+      <tr><td>IAP revenue / ROAS from these users in their first N days</td><td><b>N-Day IAP LTV</b> / <b>N-Day IAP ROAS</b></td><td>Cumulative per cohort</td></tr>
+      <tr><td>Subscriptions: trials, new, renewals, cancellations</td><td><b>New Trials</b>, <b>New Subscriptions</b>, <b>Renewals</b>, <b>Cancellations</b></td><td>Requires subscription revenue measurement</td></tr>
+      <tr><td>Subscription revenue</td><td><b>All Subscriptions Revenue</b></td><td>New subscription revenue + renewal revenue</td></tr>
+    </table>
+    <h4>Total revenue (ads + IAP + subscriptions)</h4>
+    <table>
+      <tr><th>To see</th><th>Search for</th><th>Notes</th></tr>
+      <tr><td>Total revenue for the day</td><td><b>All Revenue (Ad Mediation + IAP + Subscriptions)</b></td><td>Counted by the day revenue occurred: "how much did we make that day"</td></tr>
+      <tr><td>Total user value (LTV)</td><td><b>N-Day All LTV (Ad Mediation + IAP + Subscriptions)</b></td><td>Total revenue from these users in their first N days: "how much are these users worth". <b>For total user value, look for All LTV, not All Revenue</b></td></tr>
+      <tr><td>Total value per user</td><td><b>N-Day All LTV / User (Ad Mediation + IAP + Subscriptions)</b></td><td>The LTV above divided by users</td></tr>
+      <tr><td>Total ROAS / ROI</td><td><b>N-Day All ROAS (…)</b> / <b>N-Day All ROI (…)</b></td><td>ROAS = revenue ÷ spend; ROI = (revenue − spend) ÷ spend</td></tr>
+      <tr><td>Predicted LTV / ROAS</td><td><b>N-Day All pLTV (…)</b> / <b>N-Day All pROAS (…)</b></td><td>Tenjin's predictions from early data, useful for judging new campaigns early</td></tr>
+    </table>
+    <h4>Custom events</h4>
+    <p>Each custom event automatically gets a few metric columns named "<b>event name + suffix</b>". For example, an event called <code>purchase</code> gets <b>purchase Count</b> (times), <b>purchase Users</b> (users who triggered it), <b>purchase Sum</b> / <b>purchase Average</b> (total / average event value), plus cohort versions like 7-Day purchase Count. Just search for the event name in Edit Metrics.</p>
+  </div>
+</details>
+
+<details id="install">
+  <summary><span class="n">1</span><span class="t">How an "install" is recorded</span><span class="chev">▶</span></summary>
+  <div class="body">
+    <p>Tenjin does <b>not</b> count store downloads. It counts <b>the first app open successfully reported by the SDK on the device</b>. From the docs: "the first app_open event as the Install event and all subsequent app_open events are recorded for sessions."</p>
+    <p>This leads to a few frequently asked points:</p>
+    <ul>
+      <li>A user who downloaded from the store but never opened the app → <b>no</b> install in Tenjin.</li>
+      <li>If the SDK isn't running, there's no data at all; nothing was reported.</li>
+      <li><code>acquired_at</code> in raw data is the time of this first open, <b>not</b> the store download time. It's the anchor for all cohort metrics.</li>
+    </ul>
+    <div class="docs">
+      <a href="https://tenjin.com/docs/attribution-faq/">Attribution FAQ</a>
+      <a href="https://tenjin.com/docs/user-attribution-overview/">User attribution overview</a>
+    </div>
+  </div>
+</details>
+
+<details id="tracked">
+  <summary><span class="n">2</span><span class="t">Tracked vs Reported Installs: why the numbers differ</span><span class="pill hot">Frequent</span><span class="chev">▶</span></summary>
+  <div class="body">
+    <table>
+      <tr><th>Metric</th><th>Meaning</th><th>Source</th></tr>
+      <tr><td><b>Tracked Installs</b></td><td>Installs tracked and attributed by Tenjin</td><td>Tenjin</td></tr>
+      <tr><td><b>Reported Installs</b></td><td>Installs reported by the ad channel itself</td><td>Channel</td></tr>
+    </table>
+    <div class="note d"><p><b>Use Tracked Installs as your source of truth.</b> It's Tenjin's independent third-party attribution, and the basis for billing and reporting. Reported Installs simply shows the channel's own number for comparison.</p></div>
+    <p><b>Normal gap: around 30% for self-attributing networks (SANs; Meta's docs give 30–40%), about 10% for other channels.</b></p>
+    <h4>Why the two will always differ</h4>
+    <p>The root cause: each channel only knows about its own campaigns, while attribution exists to <b>look at all your channels together</b> and decide which one each user belongs to. The five common reasons:</p>
+    <table>
+      <tr><th>Reason</th><th>Explanation</th></tr>
+      <tr><td><b>Channels ignore third-party attribution decisions</b></td><td>Large channels such as Meta and Google use their own technology to decide which installs are theirs. When a user saw ads on several channels, a third party can't get every channel to accept the final result.</td></tr>
+      <tr><td><b>Install callbacks or click tracking URLs not set up correctly</b></td><td>The most common and easiest to fix. Go back to <a href="https://tenjin.com/docs/category/channel-setup/">the channel's setup doc</a> and check that callbacks and links are correct and working.</td></tr>
+      <tr><td><b>Uncertainty from probabilistic attribution</b></td><td>When a channel can't collect device IDs (IDFA / GAID), users can only be matched probabilistically, which is inherently less accurate than deterministic matching.</td></tr>
+      <tr><td><b>Duplicate reporting from a channel SDK and the attribution SDK</b></td><td>Tenjin sends installs to the channel; if another channel SDK in the app also reports the install, the channel's Reported number may count it twice.</td></tr>
+      <tr><td><b>The channel uses different attribution logic</b></td><td>Mostly self-attributing networks, whose internal attribution is a black box.</td></tr>
+    </table>
+    <p>For specific setup issues that <b>widen</b> the gap further, see <a href="#google">Google Ads conversion actions</a> and <a href="#meta">Meta AMM</a>.</p>
+  </div>
+</details>
+
+<details id="organic">
+  <summary><span class="n">3</span><span class="t">Where organic installs come from</span><span class="chev">▶</span></summary>
+  <div class="body">
+    <p>Tenjin uses <b>last click plus view-through attribution</b>. Clicks take priority over impressions; typical windows are 7 days for clicks and 24 hours for impressions, adjustable in the dashboard.</p>
+    <div class="note w"><p>An install marked Organic means only one thing: <b>no ad engagement matching this device was found within the attribution window.</b></p></div>
+    <p>So if organic installs look unusually high, check these three things first:</p>
+    <ol>
+      <li>Are ad clicks coming in?</li>
+      <li>Are the channels you're running authorized and set up in the dashboard?</li>
+      <li>Are device IDs being collected?</li>
+    </ol>
+    <div class="docs">
+      <a href="https://tenjin.com/docs/user-attribution-overview/">User attribution overview</a>
+      <a href="https://tenjin.com/docs/attribution-window-setup/">Attribution window setup</a>
+    </div>
+  </div>
+</details>
+
+<details id="reinstall">
+  <summary><span class="n">4</span><span class="t">Reinstalls and re-engagement</span><span class="chev">▶</span></summary>
+  <div class="body">
+    <div class="docs">
+      <a href="https://tenjin.com/docs/re-engagement-attribution/">Re-engagement attribution</a>
+      <a href="https://tenjin.com/docs/how-to-setup-re-engagement-measurement/">Set up re-engagement measurement</a>
+    </div>
+    <p><b>The basics:</b> every install generates a brand-new install ID (AIID, Analytics Installation ID, the key Tenjin records attribution under), so <b>a reinstall naturally looks like a new user</b>. Tenjin uses device IDs (GAID on Android, IDFA on iOS when ATT is allowed) to look up the device's earlier records and recognize it where possible.</p>
+    <h4>Default behavior (re-engagement off)</h4>
+    <table>
+      <tr><th>Case</th><th>Result</th></tr>
+      <tr><td><b>Reinstall · recognized</b></td><td><b>Keeps its original attribution.</b> No new conversion, no extra billing, no repeat callback to the channel; the user's later revenue stays with the campaign that originally acquired them</td></tr>
+      <tr><td><b>Reinstall · not recognized</b></td><td>The original attribution can't be inherited, so it's attributed as if new. With no matching ad engagement it becomes <b>Organic</b></td></tr>
+    </table>
+    <h4>When a reinstall can't be recognized</h4>
+    <ul>
+      <li><b>The iOS user declined ATT.</b> Without IDFA the device can't be confirmed as the same one, so the reinstall is treated as a new install. This is the main case.</li>
+      <li><b>No GAID on Android</b> (devices without Google services, or users who turned off ad personalization in system settings).</li>
+      <li><b>The device hasn't been seen for a long time.</b> Device and attribution records aren't kept forever, so a device returning after a long gap is treated as a new user.</li>
+    </ul>
+    <h4>If you run retargeting / re-engagement campaigns</h4>
+    <table>
+      <tr><th>Type</th><th>What the user did</th></tr>
+      <tr><td><b>Reinstall</b></td><td>Deleted the app, then installed it again</td></tr>
+      <tr><td><b>Reactivation</b></td><td>Kept the app but hadn't opened it in a while, then came back</td></tr>
+    </table>
+    <p>To credit returning users to the retargeting campaign that brought them back, <b>turn on Re-engagement yourself in the dashboard</b>; it's off by default. Once on, a return is credited to the retargeting campaign only when <b>all three</b> conditions are met:</p>
+    <ol>
+      <li><b>Both the app and channel switches are on.</b> The app switch is on the app page's <b>Attribution</b> tab (Enable Re-Engagements); the channel switch is in that channel's settings and only appears once we've enabled the channel, so contact us if you don't see it. <b>Set this up a few days before the campaign starts.</b></li>
+      <li>The user was inactive <b>longer than the inactivity threshold</b>: <b>7 days</b> by default, configurable from <b>1 to 30 days</b>, counted in full UTC calendar days. It applies to both reinstalls and reactivations.</li>
+      <li>There was a <b>qualifying paid ad engagement</b> within the attribution window.</li>
+    </ol>
+    <p>If any condition isn't met, the user keeps their existing attribution.</p>
+    <p><b>Only some campaigns on a channel are retargeting:</b> for non-self-attributing channels, you can leave the channel switch off and add <code>&amp;retargeting=true</code> to those campaigns' tracking links (the app switch must still be on). Self-attributing networks such as Google, Meta and TikTok only support the channel switch.</p>
+    <p><b>Callbacks:</b> self-attributing networks need nothing extra; just keep the Install callback on. Other channels need a separate Re-engagement callback turned on so they can tell returning users from new ones.</p>
+    <p><b>Reporting:</b> two new metrics, <b>Tracked Re-engagements</b> (returns credited to a paid campaign, including reinstalls and reactivations) and <b>Tracked Reinstalls</b> (reinstalls that resulted in a new attribution).</p>
+    <div class="note w"><p><b>How credit is split:</b> the original acquisition campaign keeps the install and everything the user did before returning. <b>From the day of the return</b>, the user's sessions and revenue count under the retargeting campaign, so the acquisition campaign's LTV / ROAS stops growing for that user. The retargeting campaign's cohort metrics start from the day of the return. <b>It only applies to returns after the feature is turned on</b>; earlier returns can't be recalculated. A longer threshold re-attributes fewer users and moves less credit away from acquisition campaigns.</p></div>
+  </div>
+</details>
+
+<details id="timezone">
+  <summary><span class="n">5</span><span class="t">Time zone: UTC+0</span><span class="pill hot">Frequent</span><span class="chev">▶</span></summary>
+  <div class="body">
+    <p><b>The Tenjin dashboard uses UTC+0 throughout, and switching time zones isn't currently supported.</b> This is also the default for most global UA products.</p>
+    <p>The main reason: ROI, ROAS and LTV depend on APIs from many ad and monetization channels, and some of them only provide UTC+0 data. To keep data consistent, Tenjin doesn't currently support switching time zones.</p>
+    <p>We also recommend choosing UTC+0 when opening ad accounts; it makes reconciling data much easier later.</p>
+    <div class="note d"><p><b>Reconciliation rule:</b> before comparing numbers from any two sources, make sure both are set to UTC+0 and cover exactly the same period. This is the most common, and easiest to rule out, cause of mismatched data.</p></div>
+  </div>
+</details>
+
+<details id="cohort">
+  <summary><span class="n">6</span><span class="t">Cohort metrics: what N-Day means</span><span class="chev">▶</span></summary>
+  <div class="body">
+    <p><b>Easy to spot: any metric with "N-Day" in its name is a cohort metric.</b> For example, N-Day IAP LTV, N-Day Retention Rate, N-Day Ad ROAS. From the docs: "All N-Day metrics are cohorted metrics and grouped by Acquisition Date", i.e. by install date.</p>
+    <p>N can go from 0 up to 365. Metrics without N-Day (Spend, Tracked Installs, Revenue, etc.) are daily metrics <b>counted on the day the event happened</b>.</p>
+    <div class="note w"><p><b>Don't compare the two kinds directly.</b> "Revenue on July 1" and "7-day revenue from users who installed on July 1" are completely different numbers.</p></div>
+    <p><b>Two ways to calculate retention</b> (dashboard path: <b>My Account → Manage User → Cohort Strategy</b>, at the bottom of the page):</p>
+    <table>
+      <tr><th></th><th>How Day N is defined</th><th>Good for</th></tr>
+      <tr><td><b>UTC (absolute)</b></td><td>Day 1 starts at the first UTC midnight after the user's install, so Day 0 is the partial day of the install</td><td>Matching other platforms that count in UTC, fewer definition gaps</td></tr>
+      <tr><td><b>Relative (default)</b></td><td>Counted from each user's own install time in 24-hour blocks: 0–24h is Day 0, 25–48h is Day 1</td><td>Reflecting users' real behavior, independent of install time of day</td></tr>
+    </table>
+    <p>Make sure whoever reconciles the numbers knows which one you use; the same users will have different retention rates under the two methods.</p>
+    <div class="docs">
+      <a href="https://tenjin.com/docs/manage-user/">User and account settings</a>
+      <a href="https://tenjin.com/docs/retention/">Retention</a>
+      <a href="https://tenjin.com/docs/tenjin-analysis/">Tenjin analysis types</a>
+    </div>
+  </div>
+</details>
+
+<details id="revenue">
+  <summary><span class="n">7</span><span class="t">Revenue metrics on the dashboard: know which one you're looking at</span><span class="pill hot">Frequent</span><span class="chev">▶</span></summary>
+  <div class="body">
+    <table>
+      <tr><th></th><th>Example metrics</th><th>What it is</th><th>Where it comes from</th><th>When to use</th></tr>
+      <tr><td><b>IAP revenue</b></td><td>IAP Revenue, etc.</td><td>In-app purchases</td><td>Reported by your app via SDK or S2S</td><td>Paying-user LTV / ROAS</td></tr>
+      <tr><td><b>Ad Mediation revenue</b></td><td>ad revenue (ad mediation), 0-Day LTV (ad mediation), 7-Day ROAS (ad mediation), etc.</td><td>Ad revenue, <b>impression level</b></td><td>Reported in real time by the mediation SDK (ILRD)</td><td><b>Always use this for ad ROAS</b></td></tr>
+      <tr><td><b>Ad Network revenue</b></td><td>ad revenue (ad network), 0-Day LTV (ad network), 7-Day ROAS (ad network), etc.</td><td>Ad revenue, <b>settlement level</b></td><td>Daily settled totals pulled from each monetization network's reporting API</td><td>Checking actual payouts, cross-checking for invalid traffic</td></tr>
+      <tr><td><b>Subscription revenue</b></td><td>New Subscriptions Revenue, Renewals Revenue, All Subscriptions Revenue, etc.</td><td>First payments and renewals of subscriptions</td><td>Read by Tenjin directly from the App Store / Google Play (requires <a href="#s7">subscription revenue measurement</a>)</td><td>LTV / ROAS for subscription apps</td></tr>
+    </table>
+    <p><b>Combined metrics:</b> names with "All" and brackets add several revenue types together, e.g. <b>7-Day All LTV (Ad Mediation + IAP + Subscriptions)</b>, <b>7-Day All ROAS (Ad Network + IAP + Subscriptions)</b>. The brackets show what's included, including whether the ad part uses Mediation or Network revenue.</p>
+    <h4>What's the actual difference between Ad Mediation and Ad Network?</h4>
+    <p><b>Ad Mediation (impression level)</b>: this number isn't calculated by Tenjin. After every ad impression, the mediation platform (AppLovin MAX, Unity LevelPlay, AdMob, TopOn, CAS, TradPlus, etc.) emits an impression-level revenue signal (ILRD, Impression Level Revenue Data) saying how much the winning bidder paid; the Tenjin SDK listens for it. Because each signal carries a user identifier, <b>Tenjin can tie the revenue to a specific user and roll it up to the acquiring campaign / channel / app</b>. In principle it should match your mediation dashboard.</p>
+    <p><b>Ad Network (settlement level)</b>: Tenjin calls each monetization network's reporting API to pull <b>actual settled revenue</b> per app per day, then allocates that total to acquisition channels by their <b>share of sessions</b> (every session within a channel / campaign is treated as equal). It's the money you actually get paid, but since it's allocated by sessions rather than measured per impression, it's inherently less precise for a single channel or user.</p>
+    <div class="note g"><p><b>So: use Ad Mediation for ROAS and channel optimization.</b> Each row in the UA report is an acquisition channel, and impression-level, user-linked Mediation revenue is the accurate per-channel view. Use Ad Network to check actual payouts, as a completeness benchmark, and to spot invalid traffic.</p></div>
+    <h4>What each type of ad revenue requires</h4>
+    <ul>
+      <li><b>Ad Mediation</b> needs: the mediation SDK in your app (MAX / TopOn / AdMob / TradPlus / LevelPlay, etc.) <b>plus Tenjin's matching listener.</b></li>
+      <li><b>Ad Network</b> needs: <b>every</b> monetization network added and authorized in the dashboard. Adding only your mediation platform's publisher account (e.g. AppLovin Publisher) doesn't pull settled revenue for all the networks it mediates; each network has to be added separately. Miss one and that revenue is missing entirely, which is the most common reason for a large gap.</li>
+    </ul>
+    <div class="docs">
+      <a href="https://tenjin.com/docs/category/ad-revenue-ad-mediation-setup/">Supported mediation platforms and code</a>
+      <a href="https://tenjin.com/docs/ad-revenue-channel-api-setup/">Ad revenue channel API setup</a>
+      <a href="https://tenjin.com/docs/difference-between-ad-mediation-ltv-and-ad-revenue-ltv/">The two types of LTV</a>
+      <a href="https://tenjin.com/blog/how-to-calculate-revenue-for-in-app-advertising-iaa/">How to calculate IAA revenue</a>
+    </div>
+    <h4>How big a gap is normal?</h4>
+    <p>The two methods will never match exactly, and a gap on its own doesn't mean something is wrong. Benign causes include the difference between the two methods, bid prices in ILRD being the mediation platform's estimates, time zone differences between mediation and networks, API reporting delays or later corrections, and small volumes where any absolute difference looks like a huge percentage.</p>
+    <p>A gap <b>above 20%</b> deserves attention. First check that every monetization network has been added; it could also be invalid traffic or an integration issue.</p>
+    <p><b>Anchor for troubleshooting:</b> compare each of Tenjin's numbers with its own source of truth: Ad Mediation against the mediation dashboard (MAX / AdMob), Ad Network against the sum of the networks' dashboards. Whichever matches is the reliable one, and the problem is on the other side.</p>
+  </div>
+</details>
+
+<details id="dashboard">
+  <summary><span class="n">8</span><span class="t">Reading the dashboard and exporting data</span><span class="chev">▶</span></summary>
+  <div class="body">
+    <h4>Dashboard basics</h4>
+    <p>Report pages have two sets of controls: <b>the left panel applies to the whole page; the controls above the table apply only to that table.</b></p>
+    <table>
+      <tr><th>Where</th><th>What it is</th><th>What it does</th></tr>
+      <tr><td><b>Left panel</b></td><td>Date, apps, channels, countries, Group By, granularity</td><td>Sets the data range for the whole page (charts and table); click <b>Apply Filters</b> after changing</td></tr>
+      <tr><td><b>Top left of the table · Breakdowns / Dimensions</b></td><td>How the data is split</td><td>Up to 3 levels in addition to App, e.g. App → Channel → Campaign → Date. <b>Breakdowns</b> expands level by level (click the arrow at the start of a row to drill down); <b>Dimensions</b> shows each level as a flat column, easy to sort and compare across the table</td></tr>
+      <tr><td><b>Above the table · Filter</b></td><td>The table's own filters</td><td>Filter by app, channel, country, platform, or by metric (e.g. only rows with Spend &gt; 100), or search by name. Hover over a campaign / site / creative and click "Filter by this" to see just that one</td></tr>
+      <tr><td><b>Above the table · Edit Metrics</b></td><td>Metric selection</td><td>Add or remove metric columns</td></tr>
+      <tr><td><b>Above the table · copy / download</b></td><td>Export the current table</td><td>Copy to clipboard to paste into a spreadsheet; Download CSV for a file; the Data Explorer button opens a custom report</td></tr>
+    </table>
+    <div class="docs">
+      <a href="https://tenjin.com/docs/filters-and-grouping/">Filters and grouping</a>
+      <a href="https://tenjin.com/docs/dashboard-metrics-list/">Dashboard metrics list</a>
+      <a href="https://tenjin.com/docs/tenjin-analysis/">Tenjin analysis types</a>
+    </div>
+    <h4>Which reports are there</h4>
+    <table>
+      <tr><th>Report</th><th>What it shows</th><th>Docs</th></tr>
+      <tr><td><b>User Acquisition · Overview</b></td><td>UA overview: spend, installs, retention, LTV, ROAS, split by acquisition channel / campaign, with common charts below</td><td><a href="https://tenjin.com/docs/spend/">Spend</a> · <a href="https://tenjin.com/docs/retention/">Retention</a></td></tr>
+      <tr><td><b>User Acquisition · In-App Events / Value / ROI, etc.</b></td><td>Custom event performance, user value metrics, return on spend, etc.</td><td><a href="https://tenjin.com/docs/category/user-acquisition/">User Acquisition docs</a></td></tr>
+      <tr><td><b>Ad Monetization</b></td><td>The monetization view: how much your app earns from showing ads</td><td><a href="https://tenjin.com/docs/ad-monetization-report/">Ad Monetization report</a></td></tr>
+    </table>
+    <div class="note d"><p><b>The easiest thing to mix up:</b> in the Ad Monetization report, <b>the channel filter on the left lists monetization networks, not acquisition channels</b>; they're completely different partners. The UA report answers "were the users I paid for worth it"; the Ad Monetization report answers "how much ad revenue did my app earn in total".</p></div>
+    <h4>Choosing an export tool</h4>
+    <table>
+      <tr><th>Tool</th><th>Granularity</th><th>Best for</th></tr>
+      <tr><td><b>Data Explorer</b><br>(formerly Aggregated Data Exporter)</td><td>Aggregated data. Up to 3 dimensions, daily / weekly / monthly / total, metrics of your choice, download CSV or copy to clipboard; save as reports shared with your whole organization. Covers User Acquisition, Ad Monetization and SKAdNetwork reports</td><td>People who analyze in Excel / Google Sheets</td></tr>
+      <tr><td><b>Raw Data Export (RDE)</b></td><td>User-level event data, CSV, up to 30 days per export</td><td><b>Looking at details, investigating specific users or logs</b>, or loading event data into your own warehouse</td></tr>
+      <tr><td><b>API</b> (covers both aggregated and raw data)</td><td>Programmatic access, scheduled sync to your own servers</td><td>Technical teams building an internal warehouse / dashboards</td></tr>
+    </table>
+    <p><b>Rule of thumb:</b> use the dashboard for day-to-day trends; RDE to investigate specific records or why an event looks wrong; the API for ongoing automated sync; and for a one-off pivot on a small volume, just pull RDE into Excel.</p>
+    <div class="docs">
+      <a href="https://tenjin.com/docs/aggregated-data-exporter/">Data Explorer</a>
+      <a href="https://tenjin.com/docs/raw-data-exporter/">Raw Data Export</a>
+      <a href="https://tenjin.com/docs/automation-apis/">Automation APIs</a>
+      <a href="https://tenjin.com/docs/api-access-tokens/">API access tokens</a>
+    </div>
+  </div>
+</details>
+
+<details id="latency">
+  <summary><span class="n">9</span><span class="t">What's real-time and what's delayed</span><span class="chev">▶</span></summary>
+  <div class="body">
+    <table>
+      <tr><th>Type</th><th>Includes</th><th>Delay</th></tr>
+      <tr><td><b>Near real-time</b></td><td>Tracked Installs, events reported by the SDK (custom events, purchases, etc.)</td><td>Real-time</td></tr>
+      <tr><td><b>Pulled from channel APIs</b></td><td>Spend, Reported Installs, Reported Clicks, Reported Impressions, and Ad Revenue (Ad Network)</td><td><b>Pulled every 2–3 hours</b>, so there's some delay</td></tr>
+      <tr><td><b>Newly registered test devices</b></td><td>What shows in the Live Event Tool</td><td>Shows after processing, <b>up to 3 hours</b></td></tr>
+      <tr><td><b>Attribution info on the client (LiveOps)</b></td><td>What <code>getAttributionInfo()</code> returns</td><td>See below</td></tr>
+    </table>
+    <div class="note w"><p><b>About LiveOps latency:</b> from the user's first open triggering the SDK to attribution info being available from LiveOps, <b>it's usually within a few seconds</b>. But <b>that's a rule of thumb, not a product guarantee, so don't build logic that depends on it.</b> Actual time varies with network conditions, location, client environment, user mix and app type. <b>The client must therefore poll with retries</b>; see <a href="#s2">step 2</a> for how.</p></div>
+  </div>
+</details>
+
+<details id="getattr">
+  <summary><span class="n">10</span><span class="t">Getting attribution data into your own systems</span><span class="chev">▶</span></summary>
+  <div class="body">
+    <p>Many teams need to know "which channel did this user come from" in their own systems. There are two routes, depending on where you need it:</p>
+    <table>
+      <tr><th></th><th>On your server</th><th>On the client (in the app)</th></tr>
+      <tr><td><b>Use</b></td><td>S2S callbacks</td><td>LiveOps: the SDK's <code>getAttributionInfo()</code></td></tr>
+      <tr><td><b>How it works</b></td><td>Tenjin calls the URL you configured when an event happens, with the data in parameters</td><td>The app asks Tenjin's server for this device's attribution</td></tr>
+      <tr><td><b>What you get</b></td><td>All callback macros. Attribution: <code>{{campaign_name}}</code> <code>{{ad_network}}</code> <code>{{click_id}}</code> <code>{{is_organic}}</code>; device IDs: <code>{{advertising_id}}</code> <code>{{customer_user_id}}</code>; device attributes: <code>{{country}}</code> <code>{{device_model}}</code>; events: <code>{{event}}</code> <code>{{revenue}}</code>; app info: <code>{{bundle_id}}</code> <code>{{platform}}</code>; purchases: <code>{{product_id}}</code>, etc. <b>Full list in the <a href="https://tenjin.com/docs/callback-macros/">callback macros doc</a></b></td><td><code>advertising_id</code>, <code>ad_network</code>, <code>campaign_id</code>, <code>campaign_name</code>, <code>site_id</code>, <code>creative_name</code>, <code>remote_campaign_id</code>, <code>deferred_deeplink_url</code>, <code>click_id</code>, <code>analytics_installation_id</code>, <code>referrer</code>, <code>referrer_params</code>, plus any custom values you pass on the tracking link as <code>tenjin_parameter_0</code>–<code>tenjin_parameter_5</code></td></tr>
+      <tr><td><b>Note</b></td><td>After setting it up, run a conversion test to confirm your endpoint actually receives it</td><td>Requires SDK 1.12.19+. <b>Responses aren't guaranteed to be real-time</b>; implement retry logic</td></tr>
+    </table>
+    <p><code>getAttributionInfo</code> only returns the client fields above. For more fields, use S2S callbacks.</p>
+    <div class="docs">
+      <a href="https://tenjin.com/docs/server-to-server-s2s-callbacks/">S2S callbacks</a>
+      <a href="https://tenjin.com/docs/liveops-campaigns/">LiveOps</a>
+    </div>
+  </div>
+</details>
+
+<details id="deeplink">
+  <summary><span class="n">11</span><span class="t">Deferred deep links</span><span class="chev">▶</span></summary>
+  <div class="body">
+    <p><b>What it solves:</b> a user clicks an ad for specific content / a specific game, and after installing and opening the app they land straight on that page instead of the home screen.</p>
+    <p><b>Three parts:</b></p>
+    <ol>
+      <li><b>In the app</b>, implement your own URL scheme (e.g. <code>myschema://</code>) and the routing from scheme to page. <b>You implement the routing yourself</b>; Tenjin only passes the value to you.</li>
+      <li><b>On the link</b>, append a <code>deeplink_url</code> parameter to the Tenjin tracking link, with a different value for each destination. For example:<br><code>https://track.tenjin.io/v0/xxx/campaignid123?advertising_id={advertising_id}&amp;click_id={click_id}&amp;deeplink_url=myschema://shoe1</code></li>
+      <li><b>In the SDK</b>, call <code>getAttributionInfo()</code> after <code>Connect()</code>, read the value from the <code>deferred_deeplink_url</code> field and hand it to your router.</li>
+    </ol>
+    <div class="note w"><p><b>Important: this only works for users who don't have the app installed yet.</b> For sending existing users to a page, see <a href="https://tenjin.com/docs/deeplinking-for-re-targeting-campaigns/">deep linking for retargeting campaigns</a>.</p></div>
+    <h4>How to test it yourself</h4>
+    <ol>
+      <li>Register the device as a test device, and use a device that has <b>never had the app installed</b>.</li>
+      <li>Copy a tracking link from any non-Meta channel, replace <code>advertising_id</code> with the device's ad ID, append <code>&amp;deeplink_url=</code> plus your deep link (URL-encode it if it contains <code>?</code> or <code>&amp;</code>), and open it in the phone's browser.</li>
+      <li>Install and open the app. <b>The app doesn't need to be live</b>: ignore a failed store redirect and install the test build via TestFlight / Xcode / adb.</li>
+      <li>The app should open the matching page. In the dashboard, find this open event in the <b>Live Event Tool</b> → click the device ID → check <b>Deferred Deeplink Url</b> under Device Information.</li>
+    </ol>
+    <div class="docs"><a href="https://tenjin.com/docs/deferred-deep-linking/">Deferred deep linking</a><a href="https://tenjin.com/docs/account-setup-faq/">End-to-end test steps (FAQ)</a></div>
+  </div>
+</details>
+
+<details id="testing">
+  <summary><span class="n">12</span><span class="t">Testing</span><span class="chev">▶</span></summary>
+  <div class="body">
+    <h4>Register a test device (to see whether events arrive)</h4>
+    <p>Dashboard path: <b>DIAGNOSE → Test Devices → Add Test Device</b></p>
+    <ol>
+      <li>Choose the app and enter the device's advertising ID. <b>IDFA on iOS, GAID on Android</b> (IDFV also works on iOS).</li>
+      <li><b>There's a delay after registering.</b> From the docs: "please allow up to 3 hours before you fire the event".</li>
+      <li>Events fired after that appear in the Live Event Tool in real time.</li>
+    </ol>
+    <p><b>Four rules to know:</b></p>
+    <ul>
+      <li><b>Test device data doesn't go into reports.</b> From the docs: "Any events sent through a test device… will not get recorded in the dashboard reporting." The tool is only for verification and doesn't pollute real data. Conversely, not seeing something in the Live Event Tool doesn't mean it didn't reach Tenjin; it may be in the raw data.</li>
+      <li><b>Don't test with TestFlight.</b> Per Apple's policy, TestFlight uses a new <code>advertising_id</code> on every launch, so it never matches the registered device and events never show.</li>
+      <li><b>The Live Event Tool filters by the registered device ID.</b> A changed bundle, a reinstall or a reset ad ID can all stop the old ID from matching; register again.</li>
+      <li><b>Channel callbacks can't be tested this way.</b> Test devices only record test events coming into Tenjin; callbacks to channels only happen once real campaigns run and there are real attributed installs.</li>
+    </ul>
+    <div class="docs"><a href="https://tenjin.com/docs/check-sdk-status/">Check SDK status</a></div>
+
+    <h4>Run a conversion test (to check the attribution chain)</h4>
+    <p>To verify the full "click → install → attribution" chain, run a conversion test. This only works for non-self-attributing channels, since self-attributing networks have no tracking link.</p>
+    <p><b>Prerequisites:</b> app added in the dashboard · SDK integrated · install callback switched on · a device that has <b>never downloaded this app</b>.</p>
+    <ol>
+      <li><b>Prepare the test device.</b> If the app was installed before, uninstall it and reset the device ID. iOS: reset the IDFA; the IDFV refreshes when you reinstall after deleting all apps from that developer. Android: reset the advertising ID.</li>
+      <li><b>Get the tracking link.</b> Copy the click tracking URL from the campaign page in the dashboard.</li>
+      <li><b>Replace the advertising_id macro.</b> Swap the <code>advertising_id</code> placeholder in the link for this device's real ad ID (on iOS you can look up the IDFA with an "Identifiers"-type app from the App Store).</li>
+      <li><b>Change campaign_id.</b> If the link has a <code>campaign_id</code>, set it to <code>test</code> so the test data lands under that campaign and is easy to find.</li>
+      <li><b>Open the link in the device's browser</b> (not from email or another app), then download and install the app from the store.</li>
+      <li><b>Check the dashboard</b> for this test install.</li>
+    </ol>
+    <div class="docs"><a href="https://tenjin.com/docs/run-a-conversion-test/">Run a conversion test (full steps)</a></div>
+
+    <h4>Where to confirm it's working</h4>
+    <p>The app page's <b>SDK</b> tab has the SDK integration status table (Tenjin SDK Integration Status), showing whether app version, sessions, Ad Mediation impressions (ILRD), IAP with receipts, custom events and so on have been received. <b>This table is the main way to tell whether the integration is actually working.</b></p>
+    <div class="note g"><p>An orange <b>not received</b> only means no event of that type has arrived yet; <b>it doesn't necessarily mean the integration is broken</b>. If you haven't set up IAP yet, for example, that row should say not received.</p></div>
+  </div>
+</details>
+
+</div>
+
+<!-- ══════════ PART 3 ══════════ -->
+<div class="part" id="p3">
+  <h2><span class="pn">3</span>Troubleshooting</h2>
+  <p>Start here when numbers don't match.</p>
+</div>
+
+<div class="list">
+
+<details id="checklist">
+  <summary><span class="n">A</span><span class="t">Data discrepancy checklist</span><span class="pill hot">Most used</span><span class="chev">▶</span></summary>
+  <div class="body">
+    <div class="note i">
+      <p><b>Step one: rule out definition differences.</b> Before any comparison, go through these four:</p>
+      <ol>
+        <li><b>Are both sides in UTC+0?</b> The Tenjin dashboard is fixed at UTC+0. (<a href="#timezone">See section 5</a>)</li>
+        <li><b>Is the date range exactly the same?</b></li>
+        <li><b>Are you comparing the same kind of metric?</b> Metrics with "N-Day" are cohort metrics grouped by install date; metrics without it are daily metrics counted on the day of the event. Don't compare the two. (<a href="#cohort">See section 6</a>)</li>
+        <li><b>Tracked or Reported?</b> Tracked is Tenjin's independent attribution; Reported is the channel's own number. They're different by design. Normal gap: around 30% for SANs (Meta 30–40%), about 10% for other channels. (<a href="#tracked">See section 2</a>)</li>
+      </ol>
+    </div>
+
+    <div class="qa">
+      <div class="q">Branch A: Tenjin installs don't match the channel's dashboard</div>
+      <ul>
+        <li>Is the gap already within the normal range (around 30% for SANs / 10% for others)? If so, no need to dig further.</li>
+        <li><b>Google Ads</b>: is ICM integrated on iOS? Without it, users who didn't opt in to ATT basically can't be attributed to Google. Is Firebase the primary conversion? If so, a bigger gap is expected. (<a href="#google">See 3.2</a>)</li>
+        <li><b>Meta</b>: have the AMM terms been accepted? If not, campaign / creative breakdowns only show part of the data; look at the App / channel level totals. (<a href="#meta">See 3.1</a>)</li>
+        <li><b>Health page</b>: under DIAGNOSE → Health, are there "Unlinked Campaigns" (campaigns not linked to an app)? Data from unlinked campaigns won't appear under the app.</li>
+        <li><b>Callback switch</b>: if the channel shows 0 installs, first confirm that channel's callback is switched on in Tenjin.</li>
+        <li><b>Callback Health</b>: only green 100% means all callbacks were delivered; yellow or red means some were rejected by the channel. (<a href="#s5">See step 5</a>)</li>
+        <li>Does the app also include the channel's own SDK? With both SDKs reporting, the channel's Reported number counts installs twice.</li>
+      </ul>
+    </div>
+
+    <div class="qa">
+      <div class="q">Branch B: lots of installs falling into Organic</div>
+      <p>An install marked Organic means only one thing: no ad engagement matching this device was found within the attribution window. Check these three, in order:</p>
+      <ol>
+        <li><b>Are ad clicks coming in?</b> Check the click count on the campaign's detail page in Tenjin (non-self-attributing channels). If clicks are 0 and the channel Campaign ID keeps showing unknown, check the tracking link's macro mapping.</li>
+        <li><b>Are the channels you're running authorized and set up in the dashboard?</b></li>
+        <li><b>Are device IDs being collected?</b> On Android, about 5% missing GAID is normal, and iOS users who decline ATT have no IDFA; but if close to 100% are missing, it's an integration problem.</li>
+      </ol>
+    </div>
+
+    <div class="qa">
+      <div class="q">Branch C: ad revenue doesn't match</div>
+      <p>First confirm which one you're comparing: <b>Ad Mediation (from mediation)</b> or <b>Ad Network (from APIs)</b>. They work differently and won't match each other. (<a href="#revenue">See section 7</a>)</p>
+      <ul>
+        <li>Treat a gap above 20% as a problem.</li>
+        <li><b>Ad Mediation is 0 or clearly low</b>: is Tenjin's listener integrated? Are there Unlinked Ad Placements under DIAGNOSE → Health?</li>
+        <li><b>Ad Network is clearly low</b>: has every monetization network been added and authorized separately? Adding only the mediation platform's publisher account isn't enough.</li>
+        <li><b>Totals are close, but D0 Ad ROAS differs a lot and converges by day 7/14/30</b>: that's a methodology difference between the two, not a data problem. Use Ad Mediation for ROAS.</li>
+      </ul>
+    </div>
+
+    <div class="qa">
+      <div class="q">Branch D: IAP revenue doesn't match</div>
+      <ul>
+        <li><b>Is "Valid Purchase Event" lit in the SDK integration status table?</b> If not, receipts aren't arriving or aren't passing validation; check the receipt validation section of the IAP docs.</li>
+        <li><b>To see exactly which purchases have problems</b>: export purchase events with Raw Data Export and check <code>purchase_state</code> to see whether each passed validation.</li>
+        <li><b>Total is low by a consistent percentage</b>: IAP revenue on the Tenjin dashboard is net of store commission; check whether the other side is before or after commission. (<a href="#s7">See step 7</a>)</li>
+      </ul>
+    </div>
+
+    <div class="qa">
+      <div class="q">Branch E: data looks partly missing / today's numbers aren't in yet</div>
+      <p>First check whether the metric is delayed by design: <b>real-time</b> metrics are Tracked Installs and SDK events; metrics <b>updated every 2–3 hours</b> are Spend, Reported Installs / Clicks / Impressions, and Ad Revenue (Ad Network). It's normal for these to look low on the current day. (<a href="#latency">See section 9</a>)</p>
+    </div>
+
+    <div class="qa">
+      <div class="q">Branch F: events don't show in the Live Event Tool</div>
+      <ul>
+        <li>A newly registered test device can take up to 3 hours.</li>
+        <li>Is the registered ID right? IDFA on iOS; GAID on Android.</li>
+        <li>Testing with TestFlight? TestFlight changes <code>advertising_id</code> on every launch, so it never matches.</li>
+        <li>Changed bundle, reinstalled, or reset the ad ID? Register the device again.</li>
+        <li>Not in the Live Event Tool ≠ data didn't arrive. Check in Raw Data Export.</li>
+      </ul>
+    </div>
+
+    <div class="qa">
+      <div class="q">Branch G: your own API pulls don't match the dashboard</div>
+      <ul>
+        <li>Add a 3-day lookback to scheduled jobs. Pulling T-1 too early, before ETL finishes, makes D0 revenue look low.</li>
+        <li>Set <code>read_timeout</code> to 180–300 seconds and <code>per_page</code> to 1000.</li>
+      </ul>
+    </div>
+
+    <div class="note d">
+      <p><b>Still doesn't match?</b> If you've checked all of the above, contact us with: <b>app name and platform · exact date range · channels involved · screenshots of the setup steps you've completed · for reconciliation questions, screenshots from the other side.</b></p>
+    </div>
+  </div>
+</details>
+
+</div>
+
+<!-- ══════════ PART 4 ══════════ -->
+<div class="part" id="p4">
+  <h2><span class="pn">4</span>Getting help</h2>
+  <p>Four ways to reach us, depending on your question.</p>
+</div>
+
+<div class="cards">
+  <div class="card">
+    <div class="ic">💬</div>
+    <b>Contact Support</b>
+    <span>Email <b>support@tenjin.com</b>, or ask in your group chat with the Tenjin team. Questions during setup and after launch are both welcome.</span>
+  </div>
+  <div class="card">
+    <div class="ic">🤖</div>
+    <b>AI assistant in the dashboard</b>
+    <span>The AI assistant in the <b>bottom-right corner</b> of the Tenjin dashboard can answer many common questions.</span>
+    <a href="https://dashboard.tenjin.com/dashboard">Open the Tenjin dashboard ↗</a>
+  </div>
+  <div class="card">
+    <div class="ic">⚡</div>
+    <b>Tenjin MCP</b>
+    <span>If your team uses AI tools such as Claude or ChatGPT, connect the Tenjin MCP and let the AI query your data and check your setup directly.</span>
+    <a href="https://tenjin.com/docs/getting-started-with-tenjins-mcp-server/">MCP getting started ↗</a>
+  </div>
+  <div class="card">
+    <div class="ic">📚</div>
+    <b>Tenjin docs</b>
+    <span>The full product documentation.</span>
+    <a href="https://tenjin.com/docs/">tenjin.com/docs ↗</a>
+  </div>
+</div>
+
+<div class="empty" id="empty">No matching content.</div>
+
+<footer>
+  Tenjin China Support · Last updated 2026-10-23<br>
+  This page is a setup map. Product and channel rules change; <a href="https://tenjin.com/docs/">Tenjin docs</a> are the source of truth. Questions: your group chat with the Tenjin team or <b>support@tenjin.com</b>.
+</footer>
+  </div>
+</div>
+</div>
+<button id="totop" type="button" title="Back to top">↑</button>
+<script>
+(function(){
+'use strict';
+var LS='tjguide.web.v1';
+var store=(function(){
+  var ok=true; try{ window.localStorage.setItem(LS+'.t','1'); window.localStorage.removeItem(LS+'.t'); }catch(e){ ok=false; }
+  return {
+    get:function(k,d){ if(!ok) return d; try{ var v=window.localStorage.getItem(LS+'.'+k); return v===null?d:v; }catch(e){ return d; } },
+    set:function(k,v){ if(!ok) return; try{ window.localStorage.setItem(LS+'.'+k,v); }catch(e){} }
+  };
+})();
+
+/* ── 主题：跟随系统 / 浅色 / 深色 ── */
+var THEMES=['auto','light','dark'], THEME_LABEL={auto:'Theme: system',light:'Theme: light',dark:'Theme: dark'};
+function applyTheme(t){
+  if(t==='auto') document.documentElement.removeAttribute('data-theme');
+  else document.documentElement.setAttribute('data-theme',t);
+  var b=document.getElementById('theme'); if(b) b.textContent=THEME_LABEL[t];
+  store.set('theme',t);
+}
+
+/* ── 展开到指定锚点 ── */
+function openTo(id){
+  if(!id) return;
+  var el=document.getElementById(id); if(!el) return;
+  var n=el; while(n){ if(n.tagName==='DETAILS') n.open=true; n=n.parentElement; }
+  setTimeout(function(){
+    el.scrollIntoView({behavior:'smooth',block:'start'});
+    if(el.tagName==='DETAILS'){ el.classList.remove('hit'); void el.offsetWidth; el.classList.add('hit'); }
+  },60);
+}
+
+/* ── 搜索高亮 ── */
+function clearMarks(root){
+  var ms=root.querySelectorAll('mark');
+  for(var i=0;i<ms.length;i++){ var m=ms[i], p=m.parentNode;
+    while(m.firstChild) p.insertBefore(m.firstChild,m);
+    p.removeChild(m); }
+  if(ms.length) root.normalize();
+}
+function markUp(root,term){
+  if(!term) return;
+  var low=term.toLowerCase(), nodes=[];
+  var w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{acceptNode:function(n){
+    if(!n.nodeValue || n.nodeValue.toLowerCase().indexOf(low)===-1) return NodeFilter.FILTER_REJECT;
+    var p=n.parentNode, t=p&&p.nodeName;
+    if(t==='SCRIPT'||t==='STYLE'||t==='MARK'||t==='BUTTON') return NodeFilter.FILTER_REJECT;
+    return NodeFilter.FILTER_ACCEPT;
+  }});
+  while(w.nextNode()) nodes.push(w.currentNode);
+  for(var i=0;i<nodes.length;i++){
+    var node=nodes[i], txt=node.nodeValue, frag=document.createDocumentFragment(), idx=0, at;
+    while((at=txt.toLowerCase().indexOf(low,idx))!==-1){
+      if(at>idx) frag.appendChild(document.createTextNode(txt.slice(idx,at)));
+      var m=document.createElement('mark'); m.textContent=txt.substr(at,term.length);
+      frag.appendChild(m); idx=at+term.length;
+    }
+    if(idx<txt.length) frag.appendChild(document.createTextNode(txt.slice(idx)));
+    node.parentNode.replaceChild(frag,node);
+  }
+}
+
+document.addEventListener('DOMContentLoaded',function(){
+  var wrap=document.getElementById('top');
+  var allDetails=[].slice.call(wrap.querySelectorAll('details'));
+  var lists=[].slice.call(wrap.querySelectorAll('.list'));
+  var stepList=lists[0]||null;
+
+  applyTheme(store.get('theme','auto'));
+  var tb=document.getElementById('theme');
+  if(tb) tb.addEventListener('click',function(){
+    var cur=store.get('theme','auto');
+    applyTheme(THEMES[(THEMES.indexOf(cur)+1)%THEMES.length]);
+  });
+
+  /* ── 每节：复制链接按钮 ── */
+  allDetails.forEach(function(d){
+    if(!d.id) return;
+    var s=d.querySelector('summary'); if(!s) return;
+    var b=document.createElement('button');
+    b.className='lk'; b.type='button'; b.title='Copy link to this section'; b.textContent='🔗';
+    b.addEventListener('click',function(e){
+      e.preventDefault(); e.stopPropagation();
+      var url=location.href.split('#')[0]+'#'+d.id;
+      var done=function(){ b.textContent='✓'; b.classList.add('ok');
+        setTimeout(function(){ b.textContent='🔗'; b.classList.remove('ok'); },1300); };
+      if(navigator.clipboard&&navigator.clipboard.writeText){
+        navigator.clipboard.writeText(url).then(done,function(){ window.prompt('Copy this link:',url); });
+      } else { window.prompt('Copy this link:',url); }
+    });
+    var c=s.querySelector('.chev'); if(c) s.insertBefore(b,c); else s.appendChild(b);
+  });
+
+  /* ── 接入步骤：勾选进度 ── */
+  var steps=[];
+  if(stepList){
+    [].slice.call(stepList.children).forEach(function(d){
+      if(d.tagName!=='DETAILS'||!d.id) return;
+      var nEl=d.querySelector('summary .n'); if(!nEl) return;
+      if(!/^\d+$/.test(nEl.textContent.trim())) return;   /* 只给主步骤，不给 3.1/3.2 */
+      steps.push(d);
+      var ck=document.createElement('button');
+      ck.className='ck'; ck.type='button'; ck.textContent='✓';
+      ck.title='Mark this step as done';
+      ck.addEventListener('click',function(e){
+        e.preventDefault(); e.stopPropagation();
+        d.classList.toggle('done');
+        store.set('done.'+d.id, d.classList.contains('done')?'1':'0');
+        paint();
+      });
+      d.querySelector('summary').insertBefore(ck,nEl);
+      if(store.get('done.'+d.id,'0')==='1') d.classList.add('done');
+    });
+  }
+  var bar=document.getElementById('pfill'), lab=document.getElementById('pnum');
+  function paint(){
+    if(!steps.length) return;
+    var n=steps.filter(function(d){return d.classList.contains('done');}).length;
+    if(bar) bar.style.width=(n/steps.length*100)+'%';
+    if(lab) lab.textContent=n+' / '+steps.length;
+    steps.forEach(function(d){
+      var a=document.querySelector('.toc a[data-id="'+d.id+'"]');
+      if(a) a.classList.toggle('done',d.classList.contains('done'));
+    });
+  }
+  var rst=document.getElementById('preset');
+  if(rst) rst.addEventListener('click',function(){
+    steps.forEach(function(d){ d.classList.remove('done'); store.set('done.'+d.id,'0'); });
+    paint();
+  });
+
+  /* ── 侧边栏目录 ── */
+  var toc=document.getElementById('toc');
+  var kids=[].slice.call(wrap.children), curGroup=null;
+  kids.forEach(function(el){
+    if(el.classList&&el.classList.contains('part')){
+      var h=el.querySelector('h2'); if(!h) return;
+      var g=document.createElement('a');
+      g.className='g'; g.href='#'+el.id;
+      g.textContent=(h.textContent||'').replace(/^\s*\d+\s*/,'').trim();
+      toc.appendChild(g); curGroup=el.id;
+    } else if(el.classList&&el.classList.contains('list')){
+      [].slice.call(el.children).forEach(function(d){
+        if(d.tagName!=='DETAILS'||!d.id) return;
+        var s=d.querySelector('summary'); if(!s) return;
+        var a=document.createElement('a');
+        a.href='#'+d.id; a.setAttribute('data-id',d.id);
+        var k=document.createElement('i'); k.className='k'; k.style.fontStyle='normal';
+        k.textContent=(s.querySelector('.n')||{textContent:''}).textContent.trim();
+        var t=document.createElement('span');
+        t.textContent=(s.querySelector('.t')||{textContent:''}).textContent.trim();
+        a.appendChild(k); a.appendChild(t); toc.appendChild(a);
+      });
+    }
+  });
+  /* ── 打印用目录页 ── */
+  (function(){
+    var box=document.createElement('div'); box.className='ptoc';
+    box.innerHTML='<h2>Contents</h2>';
+    var ul=null;
+    [].slice.call(toc.children).forEach(function(el){
+      if(el.classList.contains('g')){
+        var h=document.createElement('div'); h.className='pg'; h.textContent=el.textContent;
+        box.appendChild(h); ul=document.createElement('ul'); box.appendChild(ul);
+      } else if(ul){
+        var li=document.createElement('li');
+        li.innerHTML='<i></i>';
+        li.querySelector('i').textContent=el.querySelector('.k').textContent;
+        li.appendChild(document.createTextNode(el.querySelector('span').textContent));
+        ul.appendChild(li);
+      }
+    });
+    var anchor=wrap.querySelector('.hub')||wrap.querySelector('.lede');
+    if(anchor&&anchor.nextSibling) wrap.insertBefore(box,anchor.nextSibling);
+  })();
+
+  paint();
+
+  /* ── 站内锚点：点开目标 ── */
+  document.addEventListener('click',function(e){
+    var a=e.target.closest?e.target.closest('a[href^="#"]'):null;
+    if(!a) return;
+    var id=decodeURIComponent(a.getAttribute('href').slice(1));
+    if(!id||!document.getElementById(id)) return;
+    e.preventDefault();
+    if(history.replaceState) history.replaceState(null,'','#'+id);
+    document.body.classList.remove('nav');
+    openTo(id);
+  });
+
+  /* ── 滚动高亮当前章节 ── */
+  var links=[].slice.call(toc.querySelectorAll('a[data-id]'));
+  var ticking=false;
+  function spy(){
+    ticking=false;
+    var best=null, bt=-1e9;
+    for(var i=0;i<allDetails.length;i++){
+      var d=allDetails[i];
+      if(d.style.display==='none') continue;
+      var y=d.getBoundingClientRect().top-110;
+      if(y<=0&&y>bt){ bt=y; best=d.id; }
+    }
+    links.forEach(function(a){ a.classList.toggle('on',a.getAttribute('data-id')===best); });
+    var tt=document.getElementById('totop');
+    if(tt) tt.classList.toggle('show',window.pageYOffset>560);
+  }
+  window.addEventListener('scroll',function(){ if(!ticking){ ticking=true; requestAnimationFrame(spy); } },{passive:true});
+  spy();
+
+  /* ── 全部展开 / 折叠 ── */
+  function setAll(v){ allDetails.forEach(function(d){ d.open=v; }); spy(); }
+  var bo=document.getElementById('allopen'), bc=document.getElementById('allclose');
+  if(bo) bo.addEventListener('click',function(){ setAll(true); });
+  if(bc) bc.addEventListener('click',function(){ setAll(false); window.scrollTo({top:0,behavior:'smooth'}); });
+
+  /* ── 打印 / 导出 PDF ── */
+  var snap=null;
+  function prePrint(){ snap=allDetails.map(function(d){return d.open;}); allDetails.forEach(function(d){ d.open=true; }); }
+  function postPrint(){ if(snap) allDetails.forEach(function(d,i){ d.open=snap[i]; }); snap=null; }
+  window.addEventListener('beforeprint',prePrint);
+  window.addEventListener('afterprint',postPrint);
+  var pb=document.getElementById('print');
+  if(pb) pb.addEventListener('click',function(){ prePrint(); setTimeout(function(){ window.print(); },40); });
+
+  /* ── 搜索 ── */
+  var q=document.getElementById('q'), empty=document.getElementById('empty');
+  var chrome=[].slice.call(wrap.querySelectorAll('.part,.note.i,.cards,.lede,.hub'));
+  var timer=null;
+  function run(){
+    var v=q.value.trim();
+    allDetails.forEach(function(d){ clearMarks(d); });
+    if(!v){
+      allDetails.forEach(function(d){ d.style.display=''; d.open=false; });
+      lists.forEach(function(l){ l.style.display=''; });
+      chrome.forEach(function(g){ g.style.display=''; });
+      links.forEach(function(a){ a.classList.remove('hide'); });
+      [].slice.call(toc.querySelectorAll('a.g')).forEach(function(g){ g.classList.remove('hide'); });
+      empty.style.display='none'; spy(); return;
+    }
+    var low=v.toLowerCase(), n=0, hitIds={};
+    chrome.forEach(function(g){ g.style.display='none'; });
+    allDetails.forEach(function(d){
+      var hit=d.textContent.toLowerCase().indexOf(low)!==-1;
+      d.style.display=hit?'':'none'; d.open=hit;
+      if(hit){ n++; hitIds[d.id]=1; markUp(d,v); }
+    });
+    lists.forEach(function(l){
+      var any=[].slice.call(l.querySelectorAll('details')).some(function(d){return d.style.display!=='none';});
+      l.style.display=any?'':'none';
+    });
+    links.forEach(function(a){ a.classList.toggle('hide',!hitIds[a.getAttribute('data-id')]); });
+    [].slice.call(toc.querySelectorAll('a.g')).forEach(function(g){ g.classList.add('hide'); });
+    empty.style.display=n?'none':'block';
+  }
+  if(q){
+    q.addEventListener('input',function(){ clearTimeout(timer); timer=setTimeout(run,120); });
+    q.addEventListener('keydown',function(e){ if(e.key==='Escape'){ q.value=''; run(); q.blur(); } });
+  }
+  document.addEventListener('keydown',function(e){
+    if(e.key==='/'&&document.activeElement!==q&&!/^(INPUT|TEXTAREA)$/.test(document.activeElement.tagName)){
+      e.preventDefault(); document.body.classList.remove('nav'); q.focus();
+    }
+    if(e.key==='Escape') document.body.classList.remove('nav');
+  });
+
+  /* ── 窄屏抽屉 ── */
+  var bg=document.getElementById('burger'), sc=document.getElementById('scrim');
+  if(bg) bg.addEventListener('click',function(){ document.body.classList.toggle('nav'); });
+  if(sc) sc.addEventListener('click',function(){ document.body.classList.remove('nav'); });
+  var tt=document.getElementById('totop');
+  if(tt) tt.addEventListener('click',function(){ window.scrollTo({top:0,behavior:'smooth'}); });
+
+  /* ── 打开时的定位 / 全展开参数 ── */
+  if(/(^|[?&#])all=1/.test(location.search+location.hash)) setAll(true);
+  else if(location.hash) openTo(decodeURIComponent(location.hash.slice(1)));
+  window.addEventListener('hashchange',function(){ if(location.hash) openTo(decodeURIComponent(location.hash.slice(1))); });
+  [].slice.call(document.querySelectorAll('.langsw')).forEach(function(a){ a.addEventListener('click',function(){ a.href=a.getAttribute('data-base')+location.hash; }); });
+});
+})();
+
+</script>
+<!-- ========== 访问统计 ========== -->
+<!-- B. Microsoft Clarity -->
+<script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "y9dvvzlg55");
+</script>
+<!-- ========== 统计结束 ========== -->
+</body>
+</html>
